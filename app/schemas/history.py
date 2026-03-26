@@ -17,6 +17,7 @@ class ScanSummary(BaseModel):
     id: uuid.UUID
     product_name: str | None
     barcode: str | None
+    analysis_result: dict[str, Any] | None = None
     scan_type: str
     created_at: datetime
 

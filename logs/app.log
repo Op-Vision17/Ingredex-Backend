@@ -3820,3 +3820,106 @@ RuntimeError: Database connection failed
 2026-03-25 23:18:26.343 | DEBUG    | 38c75f6f-45b0-47a6-a805-cb4fbe589f45 | GET /me user_id=81d03b68-a802-4817-be54-f1466d5ad209
 2026-03-25 23:18:28.060 | INFO     | 8223abb1-3d8d-4c89-bebc-b053dc99e0f1 | Listed 3 scans for user_id=81d03b68-a802-4817-be54-f1466d5ad209
 2026-03-25 23:18:32.705 | DEBUG    | cd15ff7d-b8c8-4992-bb05-99ffacfb1833 | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=3
+2026-03-26 16:59:11.861 | INFO     | - | Database connection verified
+2026-03-26 16:59:13.889 | INFO     | - | Redis cache connected to redis://localhost:6379
+2026-03-26 16:59:13.889 | INFO     | - | Ingredex API startup complete (env=development, app=Ingredex)
+2026-03-26 17:03:10.135 | INFO     | 6394f74e-40db-4d79-9ee7-cb345189bf2d | refresh: validating refresh token
+2026-03-26 17:03:10.136 | INFO     | 6394f74e-40db-4d79-9ee7-cb345189bf2d | verify_refresh_token: validating JWT (refresh)
+2026-03-26 17:03:11.625 | INFO     | 6394f74e-40db-4d79-9ee7-cb345189bf2d | verify_refresh_token: OK user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:03:11.625 | INFO     | 6394f74e-40db-4d79-9ee7-cb345189bf2d | revoke_refresh_token: revoking by hash prefix=0d9ee7706876...
+2026-03-26 17:03:12.084 | INFO     | 6394f74e-40db-4d79-9ee7-cb345189bf2d | revoke_refresh_token: rowcount=1 revoked=True
+2026-03-26 17:03:12.085 | INFO     | 6394f74e-40db-4d79-9ee7-cb345189bf2d | save_refresh_token: persisting hash for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:03:13.992 | INFO     | 6394f74e-40db-4d79-9ee7-cb345189bf2d | save_refresh_token: stored refresh_token id=f929c656-bda7-42ac-b367-f24df1ec3978 user_id=81d03b68-a802-4817-be54-f1466d5ad209 expires_at=2026-04-02 11:33:12.086175+00:00
+2026-03-26 17:03:13.993 | INFO     | 6394f74e-40db-4d79-9ee7-cb345189bf2d | Token refreshed for user 81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:03:14.912 | DEBUG    | 19a30b7d-6b19-4356-90a3-06fdb40833a9 | GET /me user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:07:06.694 | DEBUG    | 112b399c-f3c8-4784-8e99-47f1141a28b4 | GET /me user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:07:10.909 | INFO     | 0a853a6b-1485-42a5-92fc-b45c56164052 | Listed 3 scans for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:07:13.057 | DEBUG    | 3b1d2460-526b-43ef-8fac-be349cb0bf60 | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=3
+2026-03-26 17:07:20.546 | INFO     | e8335630-13a1-4796-a778-b954f7591ebf | Deleted scan_id=d6987108-a245-49cf-9959-be8df2010c4e for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:07:21.825 | DEBUG    | 628f4d8e-55dd-491f-8a5b-3b4fba92afdf | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=2
+2026-03-26 17:08:16.368 | INFO     | 06bff139-1366-40f9-9e01-d124fd719aaf | POST /analyze user_id=81d03b68-a802-4817-be54-f1466d5ad209 product_name='choco chip cake'
+2026-03-26 17:08:16.369 | DEBUG    | 06bff139-1366-40f9-9e01-d124fd719aaf | Normalized 8 ingredients, hash=c463408079550ad958c8a50d4c6f35e5
+2026-03-26 17:08:16.371 | INFO     | 06bff139-1366-40f9-9e01-d124fd719aaf | Analysis cache miss — running CrewAI pipeline
+2026-03-26 17:08:24.776 | INFO     | 06bff139-1366-40f9-9e01-d124fd719aaf | Starting 2-agent CrewAI analysis for: choco chip cake
+2026-03-26 17:08:29.197 | INFO     | 06bff139-1366-40f9-9e01-d124fd719aaf | CrewAI analysis complete — score=6
+2026-03-26 17:08:30.584 | INFO     | 06bff139-1366-40f9-9e01-d124fd719aaf | Saved ProductScan id=61a0797f-ec4c-47d2-ad99-af5d34b75158 for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:25:21.453 | INFO     | f14e325c-4d96-4924-83e4-ba8ea8a9efd1 | send-otp: email=guptaarjun1711@gmail.com
+2026-03-26 17:25:24.521 | INFO     | f14e325c-4d96-4924-83e4-ba8ea8a9efd1 | Saved new OTP for email=guptaarjun1711@gmail.com expires_at=2026-03-26 12:00:21.453697+00:00
+2026-03-26 17:25:29.016 | INFO     | f14e325c-4d96-4924-83e4-ba8ea8a9efd1 | OTP email sent successfully to guptaarjun1711@gmail.com
+2026-03-26 17:25:29.016 | INFO     | f14e325c-4d96-4924-83e4-ba8ea8a9efd1 | send-otp: OTP email queued successfully email=guptaarjun1711@gmail.com
+2026-03-26 17:25:48.983 | INFO     | 378884b0-3d4f-490f-a4fe-4ccfe5342f90 | verify-otp: email=guptaarjun1711@gmail.com
+2026-03-26 17:25:50.349 | INFO     | 378884b0-3d4f-490f-a4fe-4ccfe5342f90 | OTP consumed for email=guptaarjun1711@gmail.com otp_id=ce0a29a1-0166-4f43-8e64-c866068df631
+2026-03-26 17:25:51.251 | INFO     | 378884b0-3d4f-490f-a4fe-4ccfe5342f90 | Existing user login: user_id=81d03b68-a802-4817-be54-f1466d5ad209 email=guptaarjun1711@gmail.com
+2026-03-26 17:25:51.251 | INFO     | 378884b0-3d4f-490f-a4fe-4ccfe5342f90 | save_refresh_token: persisting hash for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:25:52.469 | INFO     | 378884b0-3d4f-490f-a4fe-4ccfe5342f90 | save_refresh_token: stored refresh_token id=dba54db9-9f04-43c0-a907-4e5707a924f6 user_id=81d03b68-a802-4817-be54-f1466d5ad209 expires_at=2026-04-02 11:55:51.251938+00:00
+2026-03-26 17:25:52.469 | INFO     | 378884b0-3d4f-490f-a4fe-4ccfe5342f90 | verify-otp success: user_id=81d03b68-a802-4817-be54-f1466d5ad209 is_new_user=False access_expires_in_s=1800
+2026-03-26 17:25:53.395 | DEBUG    | 304e6f98-389e-4106-8a78-77e8b3f562bc | GET /me user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:26:04.991 | INFO     | 1de7d579-535a-469d-a4fe-2294d7844b5a | Listed 3 scans for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:26:05.300 | DEBUG    | 859cb049-3d0e-4e20-bde2-5af12dffb613 | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=3
+2026-03-26 17:28:54.262 | INFO     | 570e9e5b-3d2d-4b5a-929b-04806108ea78 | POST /scan/barcode barcode=028000803193
+2026-03-26 17:28:54.265 | DEBUG    | 570e9e5b-3d2d-4b5a-929b-04806108ea78 | Cache miss for barcode 028000803193 — fetching Open Food Facts
+2026-03-26 17:28:55.964 | INFO     | 570e9e5b-3d2d-4b5a-929b-04806108ea78 | Open Food Facts hit for barcode 028000803193: product_name='Bouillon'
+2026-03-26 17:28:56.784 | INFO     | 34c508af-9dad-42ad-b27d-4a7e05dc59a3 | POST /analyze user_id=81d03b68-a802-4817-be54-f1466d5ad209 product_name='Bouillon'
+2026-03-26 17:28:56.784 | DEBUG    | 34c508af-9dad-42ad-b27d-4a7e05dc59a3 | Normalized 13 ingredients, hash=6bf8315605544ac69af76617940caaf6
+2026-03-26 17:28:56.784 | INFO     | 34c508af-9dad-42ad-b27d-4a7e05dc59a3 | Analysis cache miss — running CrewAI pipeline
+2026-03-26 17:28:56.784 | INFO     | 34c508af-9dad-42ad-b27d-4a7e05dc59a3 | Starting 2-agent CrewAI analysis for: Bouillon
+2026-03-26 17:28:59.845 | INFO     | 34c508af-9dad-42ad-b27d-4a7e05dc59a3 | CrewAI analysis complete — score=4
+2026-03-26 17:29:01.199 | INFO     | 34c508af-9dad-42ad-b27d-4a7e05dc59a3 | Saved ProductScan id=eec52e0d-e965-40a3-ba97-0fc99421ed2f for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:30:40.208 | INFO     | e82bf0a4-d570-4a97-ab22-2ce38e51078e | POST /scan/barcode barcode=001210449955
+2026-03-26 17:30:40.212 | DEBUG    | e82bf0a4-d570-4a97-ab22-2ce38e51078e | Cache miss for barcode 001210449955 — fetching Open Food Facts
+2026-03-26 17:30:41.727 | WARNING  | e82bf0a4-d570-4a97-ab22-2ce38e51078e | Open Food Facts HTTP error for barcode 001210449955: 404 {"code":"0001210449955","status":0,"status_verbose":"product not found"}
+2026-03-26 17:30:44.435 | INFO     | 366c285c-a24b-4d89-a837-f3343e80b64f | POST /scan/barcode barcode=40712321
+2026-03-26 17:30:44.435 | DEBUG    | 366c285c-a24b-4d89-a837-f3343e80b64f | Cache miss for barcode 40712321 — fetching Open Food Facts
+2026-03-26 17:30:45.629 | WARNING  | 366c285c-a24b-4d89-a837-f3343e80b64f | Open Food Facts HTTP error for barcode 40712321: 404 {"code":"40712321","status":0,"status_verbose":"product not found"}
+2026-03-26 17:31:57.700 | DEBUG    | 2a01daec-a660-4ee2-914b-b13a77a2fdab | GET /me user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:32:01.617 | INFO     | 4ee3dd77-4531-4b00-bd38-e6f6cd299dd0 | Listed 4 scans for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:32:01.804 | DEBUG    | 0555dd9d-c2fb-4fd6-b9ec-fa9bec74e221 | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=4
+2026-03-26 17:40:55.770 | DEBUG    | 7f611ebe-ce45-4066-9050-6a3cef23cf0c | GET /me user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:41:01.310 | DEBUG    | e59d60a6-0d6b-4b14-b34f-e2b5f31aa7df | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=4
+2026-03-26 17:41:01.553 | INFO     | 9aee514c-cd42-4e19-96a3-34b7ccf020da | Listed 4 scans for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:41:19.883 | INFO     | 520d228a-5d57-4830-83f0-590af107f96a | Deleted scan_id=d45cffb2-0657-4f4b-8da9-004ca4a830e6 for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:41:21.142 | DEBUG    | 3d4209a2-4f2a-4f4f-bf44-48489a6b43a1 | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=3
+2026-03-26 17:41:23.544 | INFO     | b5d4310d-0241-43ad-9183-7eca53f739f1 | Deleted scan_id=901fda6e-0803-42d2-b8a7-1c2786938d4f for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:41:24.644 | DEBUG    | ef947151-703a-4391-85cb-d5b12c6bb915 | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=2
+2026-03-26 17:51:32.885 | INFO     | - | Redis cache disconnected
+2026-03-26 17:51:32.885 | INFO     | - | Ingredex API shutdown complete
+2026-03-26 17:51:39.588 | INFO     | - | Database connection verified
+2026-03-26 17:51:41.627 | INFO     | - | Redis cache connected to redis://localhost:6379
+2026-03-26 17:51:41.627 | INFO     | - | Ingredex API startup complete (env=development, app=Ingredex)
+2026-03-26 17:54:21.324 | INFO     | - | Database connection verified
+2026-03-26 17:54:23.362 | INFO     | - | Redis cache connected to redis://localhost:6379
+2026-03-26 17:54:23.362 | INFO     | - | Ingredex API startup complete (env=development, app=Ingredex)
+2026-03-26 17:54:55.996 | DEBUG    | 1d482b57-5290-49e8-9e43-50943ab85dec | GET /me user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 17:55:02.326 | DEBUG    | 3a4cb45e-9861-4e7e-9d67-3c3f78975e2b | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=2
+2026-03-26 17:55:03.540 | INFO     | b556537e-89ec-4315-a4ff-f07ca9d011cd | Listed 2 scans for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 18:01:27.732 | INFO     | 7a10a781-089a-4ae9-82cb-c9260ed933da | refresh: validating refresh token
+2026-03-26 18:01:27.732 | INFO     | 7a10a781-089a-4ae9-82cb-c9260ed933da | verify_refresh_token: validating JWT (refresh)
+2026-03-26 18:01:29.076 | INFO     | 7a10a781-089a-4ae9-82cb-c9260ed933da | verify_refresh_token: OK user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 18:01:29.076 | INFO     | 7a10a781-089a-4ae9-82cb-c9260ed933da | revoke_refresh_token: revoking by hash prefix=5bd98bcdcf7d...
+2026-03-26 18:01:29.542 | INFO     | 7a10a781-089a-4ae9-82cb-c9260ed933da | revoke_refresh_token: rowcount=1 revoked=True
+2026-03-26 18:01:29.542 | INFO     | 7a10a781-089a-4ae9-82cb-c9260ed933da | save_refresh_token: persisting hash for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 18:01:32.209 | INFO     | 7a10a781-089a-4ae9-82cb-c9260ed933da | save_refresh_token: stored refresh_token id=a97df5f6-94bf-4355-ad3f-8bdb082e2bb9 user_id=81d03b68-a802-4817-be54-f1466d5ad209 expires_at=2026-04-02 12:31:29.542515+00:00
+2026-03-26 18:01:32.210 | INFO     | 7a10a781-089a-4ae9-82cb-c9260ed933da | Token refreshed for user 81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 18:01:33.286 | DEBUG    | f9992484-11ad-46b3-9a49-bd60c3636103 | GET /me user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 18:01:36.600 | INFO     | c2ddfac5-0fe4-4ef3-b62e-e232f3f8fef4 | Listed 2 scans for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 18:01:37.076 | DEBUG    | c6fc7ed5-45db-401c-8ce8-420b0fff746a | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=2
+2026-03-26 18:02:47.473 | DEBUG    | 1ead231a-d8f1-4c43-ae32-a7388e42bb17 | GET /me user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 18:03:11.447 | INFO     | c14fcc52-1472-49b4-b966-fe18e248b3ff | Listed 2 scans for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 18:03:11.717 | DEBUG    | b3366a41-fed6-455d-a173-71adb8a05f3c | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=2
+2026-03-26 18:09:28.819 | DEBUG    | d5dcf2ee-c7c4-44d7-ac33-62a6690e2b56 | GET /me user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 18:09:32.401 | DEBUG    | 9e6b5d16-237f-4f74-9303-9f754920c8ec | History stats for user_id=81d03b68-a802-4817-be54-f1466d5ad209: total=2
+2026-03-26 18:09:32.492 | INFO     | a3617e6b-5049-4740-879e-289221644cf4 | Listed 2 scans for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 18:11:06.506 | INFO     | 70573a96-d0fa-49d7-a7bb-2c9eed5f8d14 | POST /scan/ocr filename=scaled_a5749731-a88d-422d-81f9-395ebb0c6fdf6077552777319679362.jpg content_type=image/jpeg size_bytes=2217635
+2026-03-26 18:11:10.194 | INFO     | 70573a96-d0fa-49d7-a7bb-2c9eed5f8d14 | Groq Vision OCR: extracted ingredients text (len=432)
+2026-03-26 18:11:10.204 | INFO     | 70573a96-d0fa-49d7-a7bb-2c9eed5f8d14 | POST /scan/ocr success confidence=0.95 text_len=432
+2026-03-26 18:11:11.041 | INFO     | 192ed938-4f7b-497f-9db4-73a15c8407db | POST /analyze user_id=81d03b68-a802-4817-be54-f1466d5ad209 product_name=None
+2026-03-26 18:11:11.041 | DEBUG    | 192ed938-4f7b-497f-9db4-73a15c8407db | Normalized 14 ingredients, hash=598b7c67116ee9873a393121f8c1e3c0
+2026-03-26 18:11:11.048 | INFO     | 192ed938-4f7b-497f-9db4-73a15c8407db | Analysis cache miss — running CrewAI pipeline
+2026-03-26 18:11:21.205 | INFO     | 192ed938-4f7b-497f-9db4-73a15c8407db | Starting 2-agent CrewAI analysis for: 
+2026-03-26 18:11:26.715 | INFO     | 192ed938-4f7b-497f-9db4-73a15c8407db | CrewAI analysis complete — score=4
+2026-03-26 18:11:28.200 | INFO     | 192ed938-4f7b-497f-9db4-73a15c8407db | Saved ProductScan id=cd602f66-8e97-49fb-80ee-5e34e88987aa for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-03-26 19:06:37.982 | INFO     | - | Redis cache disconnected
+2026-03-26 19:06:37.983 | INFO     | - | Ingredex API shutdown complete
+2026-03-26 19:06:49.499 | INFO     | - | Database connection verified
+2026-03-26 19:06:51.527 | INFO     | - | Redis cache connected to redis://localhost:6379
+2026-03-26 19:06:51.527 | INFO     | - | Ingredex API startup complete (env=development, app=Ingredex)

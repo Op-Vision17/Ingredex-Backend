@@ -102,7 +102,7 @@ async def analyze_ingredients(
         barcode=None,
         raw_ingredients=body.ingredients,
         analysis_result=analysis.model_dump(),
-        scan_type="analysis",
+        scan_type=body.scan_type,
     )
     db.add(scan)
     await db.commit()

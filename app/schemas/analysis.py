@@ -11,6 +11,10 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 class AnalyzeRequest(BaseModel):
     """Request body to analyze ingredient text."""
 
+    scan_type: Literal["analysis", "barcode", "ocr"] = Field(
+        "analysis",
+        description="Origin of the analysis used for history labeling.",
+    )
     product_name: str | None = Field(
         None,
         max_length=500,
