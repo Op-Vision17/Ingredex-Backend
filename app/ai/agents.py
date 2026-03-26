@@ -1,0 +1,40 @@
+"""CrewAI agents: analyzer + formatter (Groq via LiteLLM)."""
+
+from __future__ import annotations
+
+import os
+
+from crewai import Agent, LLM
+
+from app.config import Settings
+
+
+def get_agents(settings: Settings) -> tuple[Agent, Agent]:
+    os.environ["GROQ_API_KEY"] = settings.groq_api_key
+
+    llm = LLM(
+        model="groq/llama-3.3-70b-versatile",
+        temperature=0.1,
+    )
+
+    analyzer = Agent(
+        role="Food Ingredient Analyst",
+        goal="Classify ingredients, identify health risks and benefits",
+        backstory="""You are a food scientist who deeply understands food additives,
+        preservatives, colorants, sweeteners and their health impacts. You identify
+        risky ingredients like TBHQ, HFCS, artificial dyes and explain why.""",
+        llm=llm,
+        verbose=False,
+    )
+
+    formatter = Agent(
+        role="Health Report Formatter",
+        goal="Compile ingredient analysis into strict JSON health report",
+        backstory="""You are a data specialist who takes ingredient analysis
+        and formats it into clean, structured JSON. You always output valid
+        JSON with no markdown, no code blocks.""",
+        llm=llm,
+        verbose=False,
+    )
+
+    return analyzer, formatter

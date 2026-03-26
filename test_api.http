@@ -1,0 +1,118 @@
+### Ingredex API — REST Client (VS Code / JetBrains)
+### Set variables, then run requests in order where a token is needed.
+
+@baseUrl = http://localhost:8000
+@token = paste-access-token-after-verify-otp
+@refreshToken = paste-refresh-token-after-verify-otp
+@scanId = 00000000-0000-0000-0000-000000000000
+
+###############################################################################
+### Health (public)
+###############################################################################
+
+### Health check — DB + Redis
+GET {{baseUrl}}/health
+
+### Root
+GET {{baseUrl}}/
+
+###############################################################################
+### Auth (public except /me)
+###############################################################################
+
+### Send OTP — use your email
+POST {{baseUrl}}/auth/send-otp
+Content-Type: application/json
+
+{
+  "email": "you@example.com"
+}
+
+### Verify OTP — paste OTP from email/logs; copy access_token → @token, refresh_token → @refreshToken
+POST {{baseUrl}}/auth/verify-otp
+Content-Type: application/json
+
+{
+  "email": "you@example.com",
+  "otp": "123456"
+}
+
+### Refresh — exchange refresh token for new access + refresh (rotation)
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refresh_token": "{{refreshToken}}"
+}
+
+### Logout — Bearer access token; optional body revokes one refresh session, omit body to revoke all
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "refresh_token": "{{refreshToken}}"
+}
+
+### Current user (Bearer required)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+###############################################################################
+### Scan (public)
+###############################################################################
+
+### Barcode lookup (Open Food Facts + cache)
+POST {{baseUrl}}/scan/barcode
+Content-Type: application/json
+
+{
+  "barcode": "3017620422003"
+}
+
+### OCR — Groq Vision (multipart). Replace path with a local JPG/PNG/WebP.
+### If "< ./file" fails, use your client’s file picker or curl:
+### curl -sS -F "file=@label.png" {{baseUrl}}/scan/ocr
+POST {{baseUrl}}/scan/ocr
+Content-Type: multipart/form-data; boundary=----IngredexBoundary
+
+------IngredexBoundary
+Content-Disposition: form-data; name="file"; filename="label.png"
+Content-Type: image/png
+
+< ./label.png
+------IngredexBoundary--
+
+###############################################################################
+### Analyze (JWT required)
+###############################################################################
+
+### Analyze ingredients (CrewAI + Groq)
+POST {{baseUrl}}/analyze
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "product_name": "Example cereal",
+  "ingredients": "Whole grain oats, sugar, salt, natural flavor, vitamin E (mixed tocopherols)."
+}
+
+###############################################################################
+### History (JWT required)
+###############################################################################
+
+### Stats — counts by scan_type
+GET {{baseUrl}}/history/stats
+Authorization: Bearer {{token}}
+
+### List scans
+GET {{baseUrl}}/history?limit=20&offset=0
+Authorization: Bearer {{token}}
+
+### Single scan — set @scanId from list response
+GET {{baseUrl}}/history/{{scanId}}
+Authorization: Bearer {{token}}
+
+### Delete scan
+DELETE {{baseUrl}}/history/{{scanId}}
+Authorization: Bearer {{token}}
