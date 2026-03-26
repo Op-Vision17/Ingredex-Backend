@@ -89,6 +89,4 @@ See **`test_api.http`** for example calls (REST Client). Set `@token` and `@refr
 - `app/ai/` — CrewAI crew, agents, tasks, preprocessor  
 - `alembic/` — migrations  
 
-## License
 
-Add your license here.
