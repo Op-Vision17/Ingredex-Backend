@@ -7,3 +7,8 @@ __pycache__/
 .venv/
 
 # Note: alembic/versions/*.py is intentionally tracked (not ignored)
+
+# Logs
+logs/
+*.log
+.log

@@ -41,7 +41,7 @@ import json
 import re
 from typing import Any
 
-import redis.asyncio as redis
+from upstash_redis.asyncio import Redis
 
 from app.config import settings
 from app.utils.logger import logger
@@ -81,7 +81,7 @@ class CacheService:
     """
 
     def __init__(self) -> None:
-        self._client: redis.Redis | None = None
+        self._client: Redis | None = None
 
     async def connect(self) -> None:
         """
@@ -95,18 +95,17 @@ class CacheService:
         if self._client is not None:
             logger.debug("Redis cache: connect() called but client already exists")
             return
-        client = redis.from_url(
-            settings.redis_url,
-            decode_responses=True,
+        client = Redis(
+            url=settings.upstash_redis_rest_url,
+            token=settings.upstash_redis_rest_token,
         )
         try:
-            # PING is the simplest server round-trip: proves TCP + auth + protocol work.
+            # ping checks HTTP connectivity to Upstash.
             await client.ping()
         except Exception:
-            await client.aclose()
             raise
         self._client = client
-        logger.info("Redis cache connected to {}", settings.redis_url.split("@")[-1])
+        logger.info("Redis cache connected to Upstash via HTTP")
 
     async def disconnect(self) -> None:
         """
@@ -116,7 +115,6 @@ class CacheService:
         """
         if self._client is None:
             return
-        await self._client.aclose()
         self._client = None
         logger.info("Redis cache disconnected")
 
@@ -132,7 +130,7 @@ class CacheService:
         else:
             return True
 
-    def _require_client(self) -> redis.Redis:
+    def _require_client(self) -> Redis:
         if self._client is None:
             msg = "Redis cache is not connected; call connect() during app startup"
             raise RuntimeError(msg)
@@ -256,7 +254,7 @@ class CacheService:
         r = self._require_client()
         try:
             # Pipeline batches SETEX commands; one execute() flushes the batch.
-            pipe = r.pipeline(transaction=True)
+            pipe = r.pipeline()
             for key, value in mapping.items():
                 payload = json.dumps(value, ensure_ascii=False)
                 pipe.setex(key, ttl_seconds, payload)
@@ -284,9 +282,14 @@ class CacheService:
         r = self._require_client()
         deleted = 0
         try:
-            async for key in r.scan_iter(match=pattern, count=100):
-                await r.delete(key)
-                deleted += 1
+            cursor = "0"
+            while cursor != 0:
+                cursor, keys = await r.scan(cursor, match=pattern, count=100)
+                if keys:
+                    await r.delete(*keys)
+                    deleted += len(keys)
+                if cursor == "0" or cursor == 0:
+                    break
         except Exception as exc:
             logger.warning("Redis flush_pattern failed for {}: {}", pattern, exc)
             return deleted

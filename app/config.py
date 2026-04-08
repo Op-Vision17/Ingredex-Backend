@@ -43,9 +43,13 @@ class Settings(BaseSettings):
         default="",
         description="Optional Google Gemini API key (legacy; optional)",
     )
-    redis_url: str = Field(
-        default="redis://localhost:6379",
-        description="Redis connection URL",
+    upstash_redis_rest_url: str = Field(
+        default="",
+        description="Upstash Redis REST URL",
+    )
+    upstash_redis_rest_token: str = Field(
+        default="",
+        description="Upstash Redis REST token",
     )
     otp_expire_minutes: int = Field(default=5, ge=1, description="OTP validity window")
     app_env: str = Field(default="development", description="Environment name")
@@ -69,6 +73,8 @@ class Settings(BaseSettings):
                 missing.append("JWT_SECRET_KEY")
             if not self.supabase_url.strip():
                 missing.append("SUPABASE_URL")
+            if not self.upstash_redis_rest_url.strip() or not self.upstash_redis_rest_token.strip():
+                missing.append("UPSTASH_CREDENTIALS")
             if missing:
                 msg = f"Missing required settings for production: {', '.join(missing)}"
                 raise ValueError(msg)
