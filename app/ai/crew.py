@@ -19,7 +19,7 @@ from app.utils.logger import logger
 
 def _fallback_analysis_dict() -> dict[str, Any]:
     return {
-        "health_score": 5,
+        "health_score": 50,
         "risk_level": "Medium",
         "issues": [],
         "good_ingredients": [],

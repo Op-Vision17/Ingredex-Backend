@@ -18,13 +18,19 @@ def get_tasks(
 
 For each ingredient identify:
 1. Type: natural/artificial/preservative/colorant/sweetener/emulsifier/other
-2. Health risk: None/Low/Medium/High
-3. Reason for risk (if any)
+2. Health risk: None/Low/Medium/High (Be strict. Medium = allergens/debated; High = known carcinogens/banned in some countries/endocrine disruptors)
+3. Reason for risk (if any) - Provide scientific reasoning.
 4. Any health benefits
 
+Calculate a strict Health Score:
+- Start at 100 (perfectly healthy).
+- Deduct 15 points for every High risk ingredient.
+- Deduct 5 points for every Medium risk ingredient.
+- Ensure the score is an integer between 1 and 100. Let the score reflect this calculated deduction. 
+
 Also determine:
-- Overall health score 1-10 (1=very unhealthy, 10=very healthy)
-- Overall risk level: Low/Medium/High
+- Overall health score 1-100 (1=toxic, 100=pristine)
+- Overall risk level: Low/Medium/High based on findings.
 - 2 healthier product alternatives""",
         expected_output="Detailed ingredient analysis with risks and benefits",
         agent=analyzer,
@@ -35,7 +41,7 @@ Also determine:
 exact JSON with no markdown, no code fences, no extra text:
 
 {
-  "health_score": <integer 1-10>,
+  "health_score": <integer 1-100>,
   "risk_level": "<Low|Medium|High>",
   "issues": [
     {"ingredient": "<name>", "risk": "<Low|Medium|High>", "reason": "<explanation>"}

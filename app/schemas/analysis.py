@@ -80,8 +80,8 @@ class AnalysisResult(BaseModel):
     health_score: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Overall health score from 1 (worst) to 10 (best).",
+        le=100,
+        description="Overall health score from 1 (worst) to 100 (best).",
     )
     risk_level: Literal["Low", "Medium", "High"] = Field(
         ...,
