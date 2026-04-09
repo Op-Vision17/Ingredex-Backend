@@ -56,9 +56,13 @@ exact JSON with no markdown, no code fences, no extra text:
   "summary": "<2-3 sentence overall health assessment>"
 }
 
-Include top 3-5 risky ingredients in issues.
-Include top 2-3 beneficial ingredients in good_ingredients.
-Include exactly 2 alternatives.""",
+STRICT RULES:
+- An ingredient goes in "issues" if it has Medium or High risk. Period.
+- An ingredient goes in "good_ingredients" ONLY if it has NO risk (None or Low).
+- An ingredient CANNOT appear in both lists. If it has any risk, it belongs ONLY in issues.
+- Include top 3-5 risky ingredients in issues.
+- Include top 2-3 beneficial ingredients in good_ingredients.
+- Include exactly 2 alternatives.""",
         expected_output="Raw JSON string only",
         agent=formatter,
         context=[analyze_task],
