@@ -110,12 +110,49 @@ def _send_otp_email_sync(email: str, otp: str) -> bool:
     html = f"""\
 <!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"></head>
-<body style="font-family: system-ui, sans-serif; line-height: 1.5; color: #1a1a1a;">
-  <p>Your verification code is:</p>
-  <p style="font-size: 2rem; font-weight: bold; letter-spacing: 0.2em; margin: 1rem 0;">{otp}</p>
-  <p>This code expires in <strong>{settings.otp_expire_minutes} minutes</strong>.</p>
-  <p style="color: #666;">Do not share this code with anyone. Ingredex will only send codes to this email.</p>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Megrim&family=Smooch+Sans:wght@100;300;400;600&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0;padding:0;background:#0d0d0d;font-size:16px;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0d0d0d;padding:48px 24px;">
+    <tr><td align="center">
+      <table width="520" cellpadding="0" cellspacing="0" style="background:#111;border-radius:16px;border:1px solid #222;overflow:hidden;">
+
+        <tr><td style="padding:36px 48px 28px;text-align:center;border-bottom:1px solid #1e1e1e;">
+          <div style="font-family:'Megrim',cursive;font-size:32px;color:#e8f5e4;letter-spacing:0.18em;">INGREDEX</div>
+          <div style="font-family:'Smooch Sans',sans-serif;font-size:11px;font-weight:300;color:#4a7c59;letter-spacing:0.3em;text-transform:uppercase;margin-top:4px;">food intelligence</div>
+        </td></tr>
+
+        <tr><td style="padding:44px 48px 36px;text-align:center;">
+          <div style="font-family:'Smooch Sans',sans-serif;font-size:13px;font-weight:300;color:#6b6b6b;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:12px;">your verification code</div>
+          <div style="font-family:'Megrim',cursive;font-size:56px;letter-spacing:0.35em;color:#a3d9a5;margin:24px 0 8px;line-height:1;">{otp}</div>
+          <div style="width:48px;height:1px;background:#2a2a2a;margin:0 auto 28px;"></div>
+          <div style="font-family:'Smooch Sans',sans-serif;font-size:15px;font-weight:300;color:#888;line-height:1.8;margin-bottom:32px;">
+            Enter this code to verify your identity.<br>
+            This code expires in <span style="color:#a3d9a5;font-weight:400;">{settings.otp_expire_minutes} minutes</span>.
+          </div>
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#161616;border:1px solid #1e1e1e;border-radius:10px;">
+            <tr><td style="padding:16px 20px;">
+              <table cellpadding="0" cellspacing="0"><tr>
+                <td style="width:6px;height:6px;background:#4a7c59;border-radius:50%;vertical-align:middle;padding-right:10px;">&nbsp;</td>
+                <td style="font-family:'Smooch Sans',sans-serif;font-size:13px;font-weight:300;color:#555;">Do not share this code with anyone. Ingredex will never ask for your code.</td>
+              </tr></table>
+            </td></tr>
+          </table>
+        </td></tr>
+
+        <tr><td style="padding:20px 48px 32px;text-align:center;border-top:1px solid #1a1a1a;">
+          <div style="font-family:'Smooch Sans',sans-serif;font-size:12px;font-weight:300;color:#3a3a3a;line-height:1.9;">
+            Didn't request this? You can safely ignore this email.<br>
+            ingredex.app &middot; food intelligence platform
+          </div>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
 </body>
 </html>"""
 
