@@ -26,7 +26,8 @@ Calculate a strict Health Score:
 - Start at 100 (perfectly healthy).
 - Deduct 15 points for every High risk ingredient.
 - Deduct 5 points for every Medium risk ingredient.
-- Ensure the score is an integer between 1 and 100. Let the score reflect this calculated deduction. 
+- IMPORTANT PROPORTION CHECK: If a large percentage of the total ingredients are High or Medium risk, heavily penalize the score. For example, if a product has only 3 ingredients and they are all bad, the score should be below 20. Adjust the final score to reflect the overall density of bad ingredients.
+- Ensure the score is an integer between 1 and 100. 
 
 Also determine:
 - Overall health score 1-100 (1=toxic, 100=pristine)
