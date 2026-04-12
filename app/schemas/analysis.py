@@ -52,6 +52,7 @@ class IngredientIssue(BaseModel):
     ingredient: str = Field(..., min_length=1, description="Ingredient name or label fragment.")
     risk: str = Field(..., min_length=1, description="Risk category or label for this issue.")
     reason: str = Field(..., min_length=1, description="Plain-language explanation.")
+    source_domain: str = ""
 
 
 class GoodIngredient(BaseModel):
@@ -61,6 +62,7 @@ class GoodIngredient(BaseModel):
 
     ingredient: str = Field(..., min_length=1, description="Ingredient name.")
     benefit: str = Field(..., min_length=1, description="Why this ingredient is considered positive.")
+    source_domain: str = ""
 
 
 class Alternative(BaseModel):
@@ -99,6 +101,7 @@ class AnalysisResult(BaseModel):
         default_factory=list,
         description="Suggested alternatives.",
     )
+    sources_used: list[str] = []
     summary: str = Field(..., min_length=1, description="Short narrative summary of the analysis.")
 
 

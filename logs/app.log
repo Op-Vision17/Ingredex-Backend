@@ -4506,3 +4506,70 @@ groq.APIConnectionError: Connection error.
 2026-04-08 22:47:03.369 | INFO     | 3fbb1dbc-722f-488e-be83-61383c3ca051 | verify-otp success: user_id=81d03b68-a802-4817-be54-f1466d5ad209 is_new_user=False access_expires_in_s=1800
 2026-04-08 22:48:11.330 | INFO     | - | Redis cache disconnected
 2026-04-08 22:48:11.330 | INFO     | - | Ingredex API shutdown complete
+2026-04-12 15:29:14.849 | INFO     | - | Database connection verified
+2026-04-12 15:29:15.473 | INFO     | - | Redis cache connected to Upstash via HTTP
+2026-04-12 15:29:15.474 | INFO     | - | Ingredex API startup complete (env=development, app=Ingredex)
+2026-04-12 15:30:20.497 | INFO     | e3d8e9d2-5404-4838-ad0f-a85a8fca8b3f | send-otp: email=guptaarjun1711@gmail.com
+2026-04-12 15:30:23.875 | INFO     | e3d8e9d2-5404-4838-ad0f-a85a8fca8b3f | Saved new OTP for email=guptaarjun1711@gmail.com expires_at=2026-04-12 10:05:20.500914+00:00
+2026-04-12 15:30:28.508 | INFO     | e3d8e9d2-5404-4838-ad0f-a85a8fca8b3f | OTP email sent successfully to guptaarjun1711@gmail.com
+2026-04-12 15:30:28.511 | INFO     | e3d8e9d2-5404-4838-ad0f-a85a8fca8b3f | send-otp: OTP email queued successfully email=guptaarjun1711@gmail.com
+2026-04-12 15:31:13.792 | INFO     | 3eab6c72-2a81-4819-b198-36f1433a1d3b | verify-otp: email=guptaarjun1711@gmail.com
+2026-04-12 15:31:15.679 | INFO     | 3eab6c72-2a81-4819-b198-36f1433a1d3b | OTP consumed for email=guptaarjun1711@gmail.com otp_id=d2ddb9e2-e35b-45ec-afc3-b9de700a2b77
+2026-04-12 15:31:16.914 | INFO     | 3eab6c72-2a81-4819-b198-36f1433a1d3b | Existing user login: user_id=81d03b68-a802-4817-be54-f1466d5ad209 email=guptaarjun1711@gmail.com
+2026-04-12 15:31:16.959 | INFO     | 3eab6c72-2a81-4819-b198-36f1433a1d3b | save_refresh_token: persisting hash for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-04-12 15:31:18.856 | INFO     | 3eab6c72-2a81-4819-b198-36f1433a1d3b | save_refresh_token: stored refresh_token id=6719418e-c290-40ff-87e0-dfe42650da23 user_id=81d03b68-a802-4817-be54-f1466d5ad209 expires_at=2026-04-19 10:01:16.961357+00:00
+2026-04-12 15:31:18.857 | INFO     | 3eab6c72-2a81-4819-b198-36f1433a1d3b | verify-otp success: user_id=81d03b68-a802-4817-be54-f1466d5ad209 is_new_user=False access_expires_in_s=1800
+2026-04-12 15:31:40.338 | INFO     | 4a820919-90d6-413e-a6b8-43f2c905de0a | verify-otp: email=guptaarjun1711@gmail.com
+2026-04-12 15:31:41.381 | WARNING  | 4a820919-90d6-413e-a6b8-43f2c905de0a | No valid OTP for email=guptaarjun1711@gmail.com
+2026-04-12 15:31:41.381 | WARNING  | 4a820919-90d6-413e-a6b8-43f2c905de0a | verify-otp failed: invalid or expired OTP for email=guptaarjun1711@gmail.com
+2026-04-12 15:31:58.150 | INFO     | 5c8ac5ad-764a-44b7-bb61-8e55b40a0150 | verify-otp: email=guptaarjun1711@gmail.com
+2026-04-12 15:31:59.096 | WARNING  | 5c8ac5ad-764a-44b7-bb61-8e55b40a0150 | No valid OTP for email=guptaarjun1711@gmail.com
+2026-04-12 15:31:59.097 | WARNING  | 5c8ac5ad-764a-44b7-bb61-8e55b40a0150 | verify-otp failed: invalid or expired OTP for email=guptaarjun1711@gmail.com
+2026-04-12 15:32:09.012 | INFO     | 7ea711cc-8e51-489f-ad86-6c761912dd11 | send-otp: email=guptaarjun1711@gmail.com
+2026-04-12 15:32:11.487 | INFO     | 7ea711cc-8e51-489f-ad86-6c761912dd11 | Saved new OTP for email=guptaarjun1711@gmail.com expires_at=2026-04-12 10:07:09.012674+00:00
+2026-04-12 15:32:15.833 | INFO     | 7ea711cc-8e51-489f-ad86-6c761912dd11 | OTP email sent successfully to guptaarjun1711@gmail.com
+2026-04-12 15:32:15.835 | INFO     | 7ea711cc-8e51-489f-ad86-6c761912dd11 | send-otp: OTP email queued successfully email=guptaarjun1711@gmail.com
+2026-04-12 15:32:46.662 | INFO     | 05637c32-28d5-4437-ac07-e0b2939296b4 | verify-otp: email=guptaarjun1711@gmail.com
+2026-04-12 15:32:48.247 | INFO     | 05637c32-28d5-4437-ac07-e0b2939296b4 | OTP consumed for email=guptaarjun1711@gmail.com otp_id=1bbba99b-147d-4833-a7a5-3ccad778467b
+2026-04-12 15:32:49.274 | INFO     | 05637c32-28d5-4437-ac07-e0b2939296b4 | Existing user login: user_id=81d03b68-a802-4817-be54-f1466d5ad209 email=guptaarjun1711@gmail.com
+2026-04-12 15:32:49.275 | INFO     | 05637c32-28d5-4437-ac07-e0b2939296b4 | save_refresh_token: persisting hash for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-04-12 15:32:50.658 | INFO     | 05637c32-28d5-4437-ac07-e0b2939296b4 | save_refresh_token: stored refresh_token id=614114a5-df4f-4706-b8fd-575833b35e43 user_id=81d03b68-a802-4817-be54-f1466d5ad209 expires_at=2026-04-19 10:02:49.275551+00:00
+2026-04-12 15:32:50.658 | INFO     | 05637c32-28d5-4437-ac07-e0b2939296b4 | verify-otp success: user_id=81d03b68-a802-4817-be54-f1466d5ad209 is_new_user=False access_expires_in_s=1800
+2026-04-12 15:34:58.168 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | POST /analyze user_id=81d03b68-a802-4817-be54-f1466d5ad209 product_name='testing'
+2026-04-12 15:34:58.171 | DEBUG    | 9babefba-2748-44b9-a691-0893a9bc21bb | Normalized 12 ingredients, hash=faae2620d127fa92242e5d31bad13260
+2026-04-12 15:34:58.355 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Analysis cache miss — running CrewAI pipeline
+2026-04-12 15:35:14.317 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Starting 2-agent CrewAI analysis for: testing
+2026-04-12 15:35:14.496 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Fetching web context for 12 ingredients
+2026-04-12 15:35:14.496 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Skipped 3 common ingredients (water, salt, etc.)
+2026-04-12 15:35:14.496 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis HIT for ingredient: 'skimmed milk powder'
+2026-04-12 15:35:14.496 | WARNING  | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis get failed: the JSON object must be str, bytes or bytearray, not coroutine
+2026-04-12 15:35:14.519 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis HIT for ingredient: 'cocoa powder'
+2026-04-12 15:35:14.520 | WARNING  | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis get failed: the JSON object must be str, bytes or bytearray, not coroutine
+2026-04-12 15:35:14.522 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis HIT for ingredient: 'stabilizer'
+2026-04-12 15:35:14.523 | WARNING  | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis get failed: the JSON object must be str, bytes or bytearray, not coroutine
+2026-04-12 15:35:14.523 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis HIT for ingredient: 'emulsifier'
+2026-04-12 15:35:14.524 | WARNING  | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis get failed: the JSON object must be str, bytes or bytearray, not coroutine
+2026-04-12 15:35:14.525 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis HIT for ingredient: 'artificial flavor'
+2026-04-12 15:35:14.526 | WARNING  | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis get failed: the JSON object must be str, bytes or bytearray, not coroutine
+2026-04-12 15:35:14.527 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis HIT for ingredient: 'preservative'
+2026-04-12 15:35:14.528 | WARNING  | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis get failed: the JSON object must be str, bytes or bytearray, not coroutine
+2026-04-12 15:35:14.530 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis HIT for ingredient: 'color'
+2026-04-12 15:35:14.531 | WARNING  | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis get failed: the JSON object must be str, bytes or bytearray, not coroutine
+2026-04-12 15:35:14.533 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis HIT for ingredient: 'vitamin d3'
+2026-04-12 15:35:14.533 | WARNING  | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis get failed: the JSON object must be str, bytes or bytearray, not coroutine
+2026-04-12 15:35:14.534 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis HIT for ingredient: 'calcium carbonate'
+2026-04-12 15:35:14.534 | WARNING  | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis get failed: the JSON object must be str, bytes or bytearray, not coroutine
+2026-04-12 15:35:14.535 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Cache: 0 hits, 9 need Tavily search
+2026-04-12 15:35:14.538 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Tavily batch search: ['skimmed milk powder', 'cocoa powder', 'stabilizer', 'emulsifier', 'artificial flavor'] (1 call for 5 ingredients)
+2026-04-12 15:35:17.909 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Tavily batch search: ['preservative', 'color', 'vitamin d3', 'calcium carbonate'] (1 call for 4 ingredients)
+2026-04-12 15:35:19.186 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis SET for ingredient: 'skimmed milk powder' (TTL: 7 days)
+2026-04-12 15:35:19.189 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis SET for ingredient: 'cocoa powder' (TTL: 7 days)
+2026-04-12 15:35:19.189 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis SET for ingredient: 'artificial flavor' (TTL: 7 days)
+2026-04-12 15:35:19.189 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis SET for ingredient: 'preservative' (TTL: 7 days)
+2026-04-12 15:35:19.189 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Redis SET for ingredient: 'calcium carbonate' (TTL: 7 days)
+2026-04-12 15:35:19.189 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Final context: 27748 chars, 8 unique sources, Tavily calls used: 2
+2026-04-12 15:35:19.191 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Web context ready: 27748 chars, 8 sources
+2026-04-12 15:35:24.029 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | CrewAI analysis complete — score=45
+2026-04-12 15:35:26.358 | INFO     | 9babefba-2748-44b9-a691-0893a9bc21bb | Saved ProductScan id=3dc99e19-73ce-4a59-a0e7-d4d2a7153990 for user_id=81d03b68-a802-4817-be54-f1466d5ad209
+2026-04-12 15:40:40.599 | INFO     | - | Redis cache disconnected
+2026-04-12 15:40:40.600 | INFO     | - | Ingredex API shutdown complete

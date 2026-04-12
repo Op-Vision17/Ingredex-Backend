@@ -10,11 +10,27 @@ def get_tasks(
     formatter: object,
     product_name: str,
     ingredients_str: str,
+    web_context: str = "",
+    sources: list[dict] = [],
 ) -> tuple[Task, Task]:
     analyze_task = Task(
         description=f"""Analyze these ingredients from "{product_name}":
 
 {ingredients_str}
+
+   ⚠️ STRICT RULES:
+   1. Use WEB SEARCH RESULTS below as PRIMARY source
+   2. Do NOT use your own training knowledge
+   3. Cite source domain for every concern/benefit
+   4. If ingredient not in results: write
+      "No data from trusted sources"
+   5. Never guess or hallucinate
+
+   ══════════════════════════════════════
+   WEB SEARCH RESULTS (TRUSTED SOURCES):
+   ══════════════════════════════════════
+   {web_context if web_context else "No web data — use general knowledge cautiously"}
+   ══════════════════════════════════════
 
 For each ingredient identify:
 1. Type: natural/artificial/preservative/colorant/sweetener/emulsifier/other
@@ -45,15 +61,16 @@ exact JSON with no markdown, no code fences, no extra text:
   "health_score": <integer 1-100>,
   "risk_level": "<Low|Medium|High>",
   "issues": [
-    {"ingredient": "<name>", "risk": "<Low|Medium|High>", "reason": "<explanation>"}
+    {"ingredient": "<name>", "risk": "<Low|Medium|High>", "reason": "<explanation>", "source_domain": "<e.g. ewg.org>"}
   ],
   "good_ingredients": [
-    {"ingredient": "<name>", "benefit": "<health benefit>"}
+    {"ingredient": "<name>", "benefit": "<health benefit>", "source_domain": "<domain>"}
   ],
   "alternatives": [
     {"name": "<product name>", "reason": "<why healthier>"}
   ],
-  "summary": "<2-3 sentence overall health assessment>"
+  "summary": "<2-3 sentence overall health assessment>",
+  "sources_used": ["ewg.org", "fssai.gov.in"]
 }
 
 STRICT RULES:

@@ -22,8 +22,18 @@ def _split_ingredients(raw: str) -> list[str]:
 
 
 def _strip_parenthetical_content(token: str) -> str:
-    """Remove parenthetical notes (e.g. 'water (filtered)' → 'water')."""
-    s = re.sub(r"\([^)]*\)", "", token)
+    """
+    Remove parenthetical notes unless they contain numbers/codes (e.g. INS/E-numbers).
+    'water (filtered)' -> 'water'
+    'color (150c)' -> 'color (150c)'
+    """
+    def repl(match):
+        inner = match.group(0)
+        if any(char.isdigit() for char in inner):
+            return inner
+        return ""
+        
+    s = re.sub(r"\([^)]*\)", repl, token)
     return s.strip()
 
 

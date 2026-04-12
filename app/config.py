@@ -43,6 +43,7 @@ class Settings(BaseSettings):
         default="",
         description="Optional Google Gemini API key (legacy; optional)",
     )
+    tavily_api_key: str = ""
     upstash_redis_rest_url: str = Field(
         default="",
         description="Upstash Redis REST URL",
