@@ -110,6 +110,7 @@ async def verify_otp_endpoint(
         token_type="bearer",
         access_token_expires_in=expires_in,
         is_new_user=is_new_user,
+        needs_onboarding=user.health_profile is None,
     )
 
 
@@ -174,4 +175,6 @@ async def read_me(
 ) -> UserResponse:
     """Return the authenticated user's profile."""
     logger.debug("GET /me user_id={}", current_user.id)
-    return UserResponse.model_validate(current_user)
+    resp = UserResponse.model_validate(current_user)
+    resp.needs_onboarding = current_user.health_profile is None
+    return resp

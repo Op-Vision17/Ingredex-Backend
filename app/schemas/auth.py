@@ -97,6 +97,10 @@ class VerifyOTPResponse(BaseModel):
         ...,
         description="True if this verification created a new user record.",
     )
+    needs_onboarding: bool = Field(
+        default=False,
+        description="True if the user has not set up their health profile yet.",
+    )
 
 
 class RefreshTokenRequest(BaseModel):
@@ -147,3 +151,7 @@ class UserResponse(BaseModel):
     id: uuid.UUID = Field(..., description="User primary key.")
     email: str | None = Field(None, description="Registered email, if any.")
     created_at: datetime = Field(..., description="Account creation time (UTC).")
+    needs_onboarding: bool = Field(
+        default=False,
+        description="True if the user has not set up their health profile yet.",
+    )
