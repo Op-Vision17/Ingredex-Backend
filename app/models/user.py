@@ -6,9 +6,10 @@ import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, CheckConstraint, DateTime, String
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
+from typing import Any
 
 from app.database import Base
 
@@ -60,6 +61,11 @@ class User(Base):
         "RefreshToken",
         back_populates="user",
         cascade="all, delete-orphan",
+    )
+    
+    health_profile: Mapped[dict[str, Any] | None] = mapped_column(
+        JSONB,
+        nullable=True,
     )
 
     def __repr__(self) -> str:

@@ -79,6 +79,7 @@ async def analyze_ingredients(
             run_analysis,
             body.product_name or "",
             normalized,
+            current_user.health_profile,
         )
     except Exception as exc:
         logger.exception("Crew analysis failed: {}", exc)

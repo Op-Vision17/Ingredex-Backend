@@ -12,11 +12,28 @@ def get_tasks(
     ingredients_str: str,
     web_context: str = "",
     sources: list[dict] = [],
+    health_profile: dict | None = None,
 ) -> tuple[Task, Task]:
+    health_context = "No specific user health profile provided."
+    if health_profile:
+        health_context = f"""
+USER HEALTH PROFILE:
+- Allergies: {', '.join(health_profile.get('allergies', [])) or 'None'}
+- Medical Conditions: {', '.join(health_profile.get('medical_conditions', [])) or 'None'}
+- Dietary Recommendations: {health_profile.get('diet_recommendations', 'None')}
+
+STRICT SCORING & INSIGHT RULES:
+1. ALLERGY CONFLICT: If an ingredient is a confirmed user allergy, it is a 'Negative' impact.
+2. CONDITION CONFLICT: If an ingredient worsens a medical condition (e.g. sugar for diabetes), it is a 'Negative' impact.
+3. PROTECTIVE/HELPFUL: If an ingredient is beneficial specifically for their condition or goals (e.g. 'whole wheat' provides complex carbs good for diabetes, 'fiber' for digestion), flag it as a 'Positive' impact.
+4. BALANCED VIEW: Always try to find at least one 'Positive' insight if the product contains any healthy/natural ingredients that support general longevity or specifically aid the user's stated health profile."""
+
     analyze_task = Task(
         description=f"""Analyze these ingredients from "{product_name}":
 
 {ingredients_str}
+
+{health_context}
 
    ⚠️ STRICT RULES:
    1. Use WEB SEARCH RESULTS below as PRIMARY source
@@ -38,13 +55,21 @@ For each ingredient identify:
 3. Reason for risk (if any) - Provide scientific reasoning.
 4. Any health benefits
 
-Calculate a strict Health Score:
+Calculate a strict PERSONALIZED Health Score:
 - Start at 100 (perfectly healthy).
-- Deduct 15 points for every High risk ingredient.
-- Deduct 5 points for every Medium risk ingredient.
-- IMPORTANT PROPORTION CHECK: If a large percentage of the total ingredients are High or Medium risk, heavily penalize the score. For example, if a product has only 3 ingredients and they are all bad, the score should be below 20. Adjust the final score to reflect the overall density of bad ingredients.
+- GENERAL PENALTIES:
+  - Deduct 15 points for every High risk ingredient.
+  - Deduct 5 points for every Medium risk ingredient.
+- USER-SPECIFIC IMPACTS (CRITICAL):
+  - Deduct 30 points if an ingredient is a confirmed user ALLERGY.
+  - Deduct 20 points if an ingredient conflicts with a user's MEDICAL CONDITION.
+  - Deduct 15 points if the product violates a specific DIETARY RECOMMENDATION (e.g., 'avoid sugar' but sugar is present).
+  - Add 5 points (bonus) if an ingredient specifically supports a personal goal (e.g. 'high fiber').
+- PROPORTION CHECK: If most ingredients are bad or conflict with user profile, floor the score at 1-10.
+- CONCLUSION: The score MUST reflect how safe the product is for THIS specific user. 
 - Ensure the score is an integer between 1 and 100. 
 
+STRICT RULE: The FIRST sentence of your 'summary' must explicitly mention any personalized deductions. E.g., 'Score reduced due to conflicting allergies.'
 Also determine:
 - Overall health score 1-100 (1=toxic, 100=pristine)
 - Overall risk level: Low/Medium/High based on findings.
@@ -68,6 +93,9 @@ exact JSON with no markdown, no code fences, no extra text:
   ],
   "alternatives": [
     {"name": "<product name>", "reason": "<why healthier>"}
+  ],
+  "user_insights": [
+    {"impact": "<Positive|Negative|Neutral>", "title": "<short 3-4 word title>", "description": "<detailed reasoning based specifically on the user's health profile>"}
   ],
   "summary": "<2-3 sentence overall health assessment>",
   "sources_used": ["ewg.org", "fssai.gov.in"]

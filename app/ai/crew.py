@@ -31,7 +31,7 @@ def _fallback_analysis_dict() -> dict[str, Any]:
     }
 
 
-def run_analysis(product_name: str, ingredients: list[str]) -> dict[str, Any]:
+def run_analysis(product_name: str, ingredients: list[str], health_profile: dict | None = None) -> dict[str, Any]:
     if not settings.groq_api_key.strip():
         logger.error("GROQ_API_KEY is not set; cannot run ingredient crew")
         return _fallback_analysis_dict()
@@ -70,6 +70,7 @@ def run_analysis(product_name: str, ingredients: list[str]) -> dict[str, Any]:
         ingredients_str,
         web_context=web_context,
         sources=sources,
+        health_profile=health_profile,
     )
 
     crew = Crew(

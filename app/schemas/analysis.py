@@ -74,6 +74,16 @@ class Alternative(BaseModel):
     reason: str = Field(..., min_length=1, description="Why this alternative is suggested.")
 
 
+class UserInsight(BaseModel):
+    """Insight personalized for the user's specific health profile."""
+    
+    model_config = ConfigDict(str_strip_whitespace=True)
+    
+    impact: str = Field(..., description="Positive, Negative, or Neutral")
+    title: str = Field(..., description="Short title like 'Peanut Allergy Warning'")
+    description: str = Field(..., description="Detailed explanation of the impact.")
+
+
 class AnalysisResult(BaseModel):
     """Structured output from the analysis pipeline."""
 
@@ -100,6 +110,10 @@ class AnalysisResult(BaseModel):
     alternatives: list[Alternative] = Field(
         default_factory=list,
         description="Suggested alternatives.",
+    )
+    user_insights: list[UserInsight] = Field(
+        default_factory=list,
+        description="Personalized insights based on user profile.",
     )
     sources_used: list[str] = []
     summary: str = Field(..., min_length=1, description="Short narrative summary of the analysis.")
