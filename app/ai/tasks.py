@@ -69,7 +69,7 @@ Calculate a strict PERSONALIZED Health Score:
 - CONCLUSION: The score MUST reflect how safe the product is for THIS specific user. 
 - Ensure the score is an integer between 1 and 100. 
 
-STRICT RULE: The FIRST sentence of your 'summary' must explicitly mention any personalized deductions. E.g., 'Score reduced due to conflicting allergies.'
+STRICT RULE: The FIRST sentence of your 'summary' must explicitly mention any personalized deductions. E.g., 'This product scores lower due to ingredients that conflict with your allergies.'
 Also determine:
 - Overall health score 1-100 (1=toxic, 100=pristine)
 - Overall risk level: Low/Medium/High based on findings.
@@ -107,7 +107,10 @@ STRICT RULES:
 - An ingredient CANNOT appear in both lists. If it has any risk, it belongs ONLY in issues.
 - Include top 3-5 risky ingredients in issues.
 - Include top 2-3 beneficial ingredients in good_ingredients.
-- Include exactly 2 alternatives.""",
+- Include exactly 2 alternatives.
+- The health_score is a score for the PRODUCT, not the person. Never say "your score". Instead say things like "this product scores", "this product is", "this product is not recommended for you".
+- In summary and user_insights, address the person directly using "you/your" when talking about their health profile, but always refer to the score/risk as belonging to the product.
+- Never use the word "user". Use "you" or "your" instead.""",
         expected_output="Raw JSON string only",
         agent=formatter,
         context=[analyze_task],

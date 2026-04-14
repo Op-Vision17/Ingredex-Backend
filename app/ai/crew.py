@@ -9,8 +9,6 @@ from typing import Any
 os.environ["CREWAI_DISABLE_TELEMETRY"] = "true"
 os.environ["OTEL_SDK_DISABLED"] = "true"
 
-from crewai import Crew, Process
-
 from app.ai.agents import get_agents
 from app.ai.tasks import get_tasks
 from app.config import settings
@@ -32,6 +30,8 @@ def _fallback_analysis_dict() -> dict[str, Any]:
 
 
 def run_analysis(product_name: str, ingredients: list[str], health_profile: dict | None = None) -> dict[str, Any]:
+    from crewai import Agent, Task, Crew, Process
+    from app.services.web_search_service import web_search_service
     if not settings.groq_api_key.strip():
         logger.error("GROQ_API_KEY is not set; cannot run ingredient crew")
         return _fallback_analysis_dict()
@@ -40,7 +40,6 @@ def run_analysis(product_name: str, ingredients: list[str], health_profile: dict
 
     logger.info("Starting 2-agent CrewAI analysis for: {}", product_name)
 
-    from app.services.web_search_service import web_search_service
     from app.services.cache_service import cache
     
     # Get Redis client for ingredient caching
