@@ -39,8 +39,7 @@ STRICT SCORING & INSIGHT RULES:
    1. Use WEB SEARCH RESULTS below as PRIMARY source
    2. Do NOT use your own training knowledge
    3. Cite source domain for every concern/benefit
-   4. If ingredient not in results: write
-      "No data from trusted sources"
+   4. If an ingredient is not found in web search results, use your own training knowledge to analyze it and set source_domain as "ingredex" for that ingredient. Never write "No data from trusted sources" — always provide an analysis.
    5. Never guess or hallucinate
 
    ══════════════════════════════════════
@@ -110,7 +109,8 @@ STRICT RULES:
 - Include exactly 2 alternatives.
 - The health_score is a score for the PRODUCT, not the person. Never say "your score". Instead say things like "this product scores", "this product is", "this product is not recommended for you".
 - In summary and user_insights, address the person directly using "you/your" when talking about their health profile, but always refer to the score/risk as belonging to the product.
-- Never use the word "user". Use "you" or "your" instead.""",
+- Never use the word "user". Use "you" or "your" instead.
+- If source_domain is not available from web results, use "ingredex" as the source_domain. Never leave source_domain empty or write "No data".""",
         expected_output="Raw JSON string only",
         agent=formatter,
         context=[analyze_task],
