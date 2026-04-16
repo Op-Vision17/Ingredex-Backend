@@ -15,8 +15,12 @@ from starlette.responses import Response
 
 from app.config import settings
 from app.database import check_database_connection, init_db
-from app.routers import analyze, auth, history, scan, profile
-from app.services.cache_service import cache
+from app.features.auth.router import router as auth_router
+from app.features.scan.router import router as scan_router
+from app.features.analyze.router import router as analyze_router
+from app.features.history.router import router as history_router
+from app.features.profile.router import router as profile_router
+from app.shared.services.cache_service import cache
 from app.utils.logger import logger, request_id_ctx
 
 
@@ -74,11 +78,11 @@ app.add_middleware(
 )
 app.add_middleware(RequestIDMiddleware)
 
-app.include_router(auth.router, prefix="/auth", tags=["auth"])
-app.include_router(scan.router, prefix="/scan", tags=["scan"])
-app.include_router(analyze.router, prefix="/analyze", tags=["analyze"])
-app.include_router(history.router, prefix="/history", tags=["history"])
-app.include_router(profile.router, prefix="/profile", tags=["profile"])
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
+app.include_router(scan_router, prefix="/scan", tags=["scan"])
+app.include_router(analyze_router, prefix="/analyze", tags=["analyze"])
+app.include_router(history_router, prefix="/history", tags=["history"])
+app.include_router(profile_router, prefix="/profile", tags=["profile"])
 
 
 @app.exception_handler(Exception)

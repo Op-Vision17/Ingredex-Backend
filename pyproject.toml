@@ -29,7 +29,7 @@ crewai = ">=0.80.0"
 langchain-groq = ">=0.2.0"
 langchain = ">=0.3.0"
 langchain-core = ">=0.3.0"
-litellm = "^1.82.6"
+litellm = "^1.82.0"
 tavily-python = "^0.7.23"
 
 [tool.poetry.scripts]

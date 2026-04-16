@@ -1,0 +1,121 @@
+================================================================================
+INGREDEX BACKEND — FOLDER STRUCTURE CHANGE BRIEF
+================================================================================
+
+Date: 2026-04-16
+Change: Restructured from FLAT LAYER-BASED to FEATURE-BASED MODULAR architecture
+
+
+WHAT CHANGED
+============
+
+BEFORE (Layer-based — code grouped by technical layer):
+  app/
+  ├── routers/          ← ALL route files together
+  │   ├── auth.py, scan.py, analyze.py, history.py, profile.py
+  ├── services/         ← ALL service files together
+  │   ├── auth_service.py, otp_service.py, scan_service.py,
+  │   │   ocr_service.py, cache_service.py, web_search_service.py
+  ├── schemas/          ← ALL schema files together
+  │   ├── auth.py, scan.py, analysis.py, history.py, profile.py
+  ├── models/           ← Shared ORM models (UNCHANGED)
+  ├── ai/               ← AI pipeline (UNCHANGED)
+  └── utils/            ← Utilities (UNCHANGED)
+
+AFTER (Feature-based — code grouped by business feature):
+  app/
+  ├── features/
+  │   ├── auth/         ← Everything about authentication in ONE folder
+  │   │   ├── router.py     → endpoint declarations
+  │   │   ├── handler.py    → request handling & response building
+  │   │   ├── service.py    → business logic (OTP + user + tokens)
+  │   │   ├── dao.py        → database queries
+  │   │   └── schemas.py    → Pydantic request/response models
+  │   ├── scan/         ← Everything about barcode/OCR scanning
+  │   │   ├── router.py, handler.py, service.py, dao.py, schemas.py
+  │   ├── analyze/      ← Everything about ingredient analysis
+  │   │   ├── router.py, handler.py, service.py, dao.py, schemas.py
+  │   ├── history/      ← Everything about scan history
+  │   │   ├── router.py, handler.py, service.py, dao.py, schemas.py
+  │   └── profile/      ← Everything about health profiles
+  │       ├── router.py, handler.py, service.py, dao.py, schemas.py
+  ├── shared/
+  │   └── services/
+  │       ├── cache_service.py      ← Redis cache (used across features)
+  │       ├── ocr_service.py        ← Groq Vision OCR (used by scan)
+  │       └── web_search_service.py ← Tavily web search (used by AI)
+  ├── models/           ← UNCHANGED
+  ├── ai/               ← UNCHANGED (imports updated)
+  └── utils/            ← UNCHANGED
+
+
+WHY THIS CHANGE
+===============
+
+1. EASIER TO UNDERSTAND
+   - Want to understand auth? Look in app/features/auth/ — everything is there
+   - No jumping between 3+ different folders to understand one feature
+
+2. EASIER TO ADD NEW FEATURES
+   - Adding a new feature (e.g., "notifications"):
+     → Just create app/features/notifications/ with the 5-file pattern
+     → Register the router in main.py
+     → Done. No touching other features.
+
+3. CLEAR SEPARATION OF CONCERNS
+   Each file has ONE job:
+   ┌─────────────┬─────────────────────────────────────────────────┐
+   │ router.py   │ Endpoint declarations (thin, no logic)         │
+   │ handler.py  │ Request validation, orchestration, HTTP errors  │
+   │ service.py  │ Business logic (no HTTP/FastAPI concepts)       │
+   │ dao.py      │ Database queries only (SQLAlchemy)              │
+   │ schemas.py  │ Pydantic request/response models                │
+   └─────────────┴─────────────────────────────────────────────────┘
+
+4. TEAM FRIENDLY
+   - Multiple developers can work on different features without conflicts
+   - Each feature is self-contained
+
+
+WHAT DID NOT CHANGE
+===================
+
+- API surface: ALL endpoints remain identical (same URLs, same payloads)
+- Database models: app/models/ unchanged (shared across features)
+- AI pipeline: app/ai/ unchanged (only import paths updated)
+- Utilities: app/utils/ unchanged
+- Config: app/config.py unchanged
+- Database: app/database.py unchanged
+- Dependencies: app/dependencies.py unchanged
+- Alembic migrations: No changes needed
+
+
+HOW TO ADD A NEW FEATURE (TEMPLATE)
+====================================
+
+1. Create folder: app/features/your_feature/
+2. Add these files:
+   - __init__.py    (empty or docstring)
+   - schemas.py     (Pydantic models)
+   - dao.py         (database queries)
+   - service.py     (business logic, uses dao)
+   - handler.py     (request handling, uses service)
+   - router.py      (APIRouter, delegates to handler)
+3. Register in main.py:
+   from app.features.your_feature.router import router as your_feature_router
+   app.include_router(your_feature_router, prefix="/your-feature", tags=["your-feature"])
+
+That's it!
+
+
+FILES DELETED
+=============
+- app/routers/          (replaced by app/features/*/router.py)
+- app/services/         (split into app/features/*/service.py + app/shared/services/)
+- app/schemas/          (replaced by app/features/*/schemas.py)
+
+
+FILES MODIFIED
+==============
+- app/main.py           (updated imports to new paths)
+- app/ai/crew.py        (updated imports for cache_service and web_search_service)
