@@ -70,7 +70,7 @@ async def extract_text_from_image(image_bytes: bytes) -> dict:
     data_url = f"data:{mime};base64,{b64}"
 
     llm = ChatGroq(
-        model="llama-3.2-11b-vision-preview",
+        model="llama-3.2-11b-vision-instruct",
         api_key=settings.groq_api_key,
         temperature=0,
     )
