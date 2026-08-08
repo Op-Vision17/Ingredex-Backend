@@ -173,9 +173,11 @@ class WebSearchService:
                             for word in ing_lower.split()
                             if len(word) > 3
                         ):
+                            raw_snippet = r.get("content", "").strip()
+                            snippet = raw_snippet[:350] + ("..." if len(raw_snippet) > 350 else "")
                             matched_content.append(
                                 f"[Source: {url}]\n"
-                                f"{r.get('content', '')}"
+                                f"{snippet}"
                             )
                             domain = (
                                 url.split("/")[2] if url else ""
@@ -324,6 +326,8 @@ class WebSearchService:
                 unique_sources.append(s)
 
         context = "\n\n".join(context_parts)
+        if len(context) > 3000:
+            context = context[:3000] + "\n[Context capped for token limits]"
         logger.info(
             f"Final context: {len(context)} chars, "
             f"{len(unique_sources)} unique sources"
@@ -366,7 +370,10 @@ class WebSearchService:
                 seen.add(url)
                 unique_sources.append(s)
 
-        return "\n\n".join(context_parts), unique_sources
+        context = "\n\n".join(context_parts)
+        if len(context) > 3000:
+            context = context[:3000] + "\n[Context capped for token limits]"
+        return context, unique_sources
 
 web_search_service = WebSearchService()
 
