@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from tavily import TavilyClient
 from app.config import settings
 from app.utils.logger import logger
@@ -117,96 +118,96 @@ class WebSearchService:
 
     # ─── Batch search ─────────────────────────────────────
 
-    def _batch_search(
-        self,
-        ingredients: list[str],
-    ) -> dict[str, dict]:
-        """
-        OPTIMIZATION: Search multiple ingredients in ONE
-        Tavily call instead of one call per ingredient.
+    def _search_single_batch(self, batch: list[str]) -> dict[str, dict]:
+        batch_query = (
+            " ".join(batch)
+            + " food safety health effects risks benefits"
+        )
+        logger.info(
+            f"Tavily batch search: {batch} "
+            f"(1 call for {len(batch)} ingredients)"
+        )
+        batch_results: dict[str, dict] = {}
+        try:
+            response = self.client.search(
+                query=batch_query,
+                search_depth="basic",
+                include_domains=TRUSTED_DOMAINS,
+                max_results=5,
+                include_answer=False,
+            )
 
-        Strategy:
-        - Group ingredients into batches of 5
-        - Single query: "TBHQ BHA Red40 safety risks"
-        - Parse results and map back to ingredients
-        - 15 ingredients = 3 calls instead of 15 ✅
+            for ingredient in batch:
+                ing_lower = ingredient.lower()
+                matched_content = []
+                matched_sources = []
+
+                for r in response.get("results", []):
+                    content = r.get("content", "").lower()
+                    url = r.get("url", "")
+                    if ing_lower in content or any(
+                        word in content
+                        for word in ing_lower.split()
+                        if len(word) > 3
+                    ):
+                        raw_snippet = r.get("content", "").strip()
+                        snippet = raw_snippet[:350] + ("..." if len(raw_snippet) > 350 else "")
+                        matched_content.append(
+                            f"[Source: {url}]\n"
+                            f"{snippet}"
+                        )
+                        domain = (
+                            url.split("/")[2] if url else ""
+                        )
+                        matched_sources.append({
+                            "title": r.get("title", ""),
+                            "url": url,
+                            "domain": domain,
+                        })
+
+                batch_results[ingredient] = {
+                    "ingredient": ingredient,
+                    "content": "\n\n".join(matched_content),
+                    "sources": matched_sources,
+                    "found": bool(matched_sources),
+                }
+
+        except Exception as e:
+            logger.warning(
+                f"Tavily batch failed for {batch}: {e}"
+            )
+            for ingredient in batch:
+                batch_results[ingredient] = {
+                    "ingredient": ingredient,
+                    "content": "",
+                    "sources": [],
+                    "found": False,
+                }
+        return batch_results
+
+    def _batch_search(self, ingredients: list[str]) -> dict[str, dict]:
         """
-        results: dict[str, dict] = {}
+        Parallelized batch search up to 5 ingredients per Tavily call across worker threads.
+        """
+        if not self.client:
+            logger.warning("Tavily API key not set — skipping web search")
+            return {}
+
         batch_size = 5
-
-        # Split into batches of 5
         batches = [
-            ingredients[i: i + batch_size]
+            ingredients[i : i + batch_size]
             for i in range(0, len(ingredients), batch_size)
         ]
 
-        for batch in batches:
-            batch_query = (
-                " ".join(batch)
-                + " food safety health effects risks benefits"
-            )
-            logger.info(
-                f"Tavily batch search: {batch} "
-                f"(1 call for {len(batch)} ingredients)"
-            )
-            try:
-                response = self.client.search(
-                    query=batch_query,
-                    search_depth="basic",
-                    include_domains=TRUSTED_DOMAINS,
-                    max_results=5,
-                    include_answer=False,
-                )
-
-                # Map search results back to each ingredient
-                for ingredient in batch:
-                    ing_lower = ingredient.lower()
-                    matched_content = []
-                    matched_sources = []
-
-                    for r in response.get("results", []):
-                        content = r.get("content", "").lower()
-                        url = r.get("url", "")
-                        # Include result if it mentions ingredient
-                        if ing_lower in content or any(
-                            word in content
-                            for word in ing_lower.split()
-                            if len(word) > 3
-                        ):
-                            raw_snippet = r.get("content", "").strip()
-                            snippet = raw_snippet[:350] + ("..." if len(raw_snippet) > 350 else "")
-                            matched_content.append(
-                                f"[Source: {url}]\n"
-                                f"{snippet}"
-                            )
-                            domain = (
-                                url.split("/")[2] if url else ""
-                            )
-                            matched_sources.append({
-                                "title": r.get("title", ""),
-                                "url": url,
-                                "domain": domain,
-                            })
-
-                    results[ingredient] = {
-                        "ingredient": ingredient,
-                        "content": "\n\n".join(matched_content),
-                        "sources": matched_sources,
-                        "found": bool(matched_sources),
-                    }
-
-            except Exception as e:
-                logger.warning(
-                    f"Tavily batch failed for {batch}: {e}"
-                )
-                # Return empty for this batch
-                for ingredient in batch:
-                    results[ingredient] = {
-                        "ingredient": ingredient,
-                        "content": "",
-                        "sources": [],
-                        "found": False,
-                    }
+        results: dict[str, dict] = {}
+        with ThreadPoolExecutor(max_workers=min(len(batches), 5)) as executor:
+            future_to_batch = {
+                executor.submit(self._search_single_batch, batch): batch
+                for batch in batches
+            }
+            for future in as_completed(future_to_batch):
+                batch_res = future.result()
+                results.update(batch_res)
 
         return results
 

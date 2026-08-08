@@ -92,6 +92,7 @@ async def extract_text_from_image(image_bytes: bytes) -> dict:
         return {"extracted_text": None, "confidence": 0.0, "found": False}
 
     raw = _response_text(response.content).strip()
+    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
     stripped = raw.strip().strip('"').strip("'")
     compact = re.sub(r"\s+", "", stripped.upper())
     if compact == "NO_INGREDIENTS_FOUND":
