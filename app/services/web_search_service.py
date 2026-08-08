@@ -208,48 +208,76 @@ class WebSearchService:
 
         return results
 
-    # ─── Main public method ───────────────────────────────
+    # ─── Redis helpers (Async) ────────────────────────────
 
-    def fetch_context(
+    async def _get_cached_async(
+        self,
+        ingredient: str,
+        cache_service,
+    ) -> dict | None:
+        try:
+            val = await cache_service.get(self._cache_key(ingredient))
+            if val and isinstance(val, dict):
+                logger.info(f"Redis HIT for ingredient: '{ingredient}'")
+                return val
+            logger.info(f"Redis MISS for ingredient: '{ingredient}'")
+            return None
+        except Exception as e:
+            logger.warning(f"Redis async get failed: {e}")
+            return None
+
+    async def _set_cached_async(
+        self,
+        ingredient: str,
+        data: dict,
+        cache_service,
+    ) -> None:
+        try:
+            await cache_service.set(
+                self._cache_key(ingredient),
+                data,
+                ttl_seconds=INGREDIENT_CACHE_TTL,
+            )
+            logger.info(f"Redis SET for ingredient: '{ingredient}' (TTL: 7 days)")
+        except Exception as e:
+            logger.warning(f"Redis async set failed: {e}")
+
+    # ─── Main async method ───────────────────────────────
+
+    async def fetch_context_async(
         self,
         ingredients: list[str],
-        redis_client=None,
+        cache_service=None,
     ) -> tuple[str, list[dict]]:
         """
-        Main method called from crew.py.
+        Asynchronous flow called before offloading CrewAI to thread worker.
         
-        Full optimized flow:
         1. Skip common safe ingredients
-        2. Check Redis cache per ingredient
-        3. Batch search remaining on Tavily
-        4. Save new results to Redis
+        2. Check Redis cache asynchronously per ingredient
+        3. Batch search remaining on Tavily (in worker thread)
+        4. Save new results to Redis asynchronously
         5. Return formatted context + sources
-        
-        Called synchronously from crew thread.
         """
-        # Step 1 — Filter common/safe ingredients
+        import asyncio
+
         searchable = [
             i for i in ingredients
             if i.lower().strip() not in SKIP_SEARCH
         ]
         skipped = len(ingredients) - len(searchable)
         if skipped:
-            logger.info(
-                f"Skipped {skipped} common ingredients "
-                f"(water, salt, etc.)"
-            )
+            logger.info(f"Skipped {skipped} common ingredients (water, salt, etc.)")
 
         if not searchable:
             logger.info("All ingredients are common — no search needed")
             return "", []
 
-        # Step 2 — Check Redis cache for each ingredient
         cached_results: dict[str, dict] = {}
         need_search: list[str] = []
 
-        if redis_client:
+        if cache_service and getattr(cache_service, "_client", None) is not None:
             for ing in searchable:
-                cached = self._get_cached(ing, redis_client)
+                cached = await self._get_cached_async(ing, cache_service)
                 if cached:
                     cached_results[ing] = cached
                 else:
@@ -262,48 +290,83 @@ class WebSearchService:
             f"{len(need_search)} need Tavily search"
         )
 
-        # Step 3 — Batch search only uncached ingredients
         fresh_results: dict[str, dict] = {}
         if need_search:
-            fresh_results = self._batch_search(need_search)
+            try:
+                fresh_results = await asyncio.to_thread(self._batch_search, need_search)
+            except Exception as e:
+                logger.warning(f"Tavily search execution error: {e}")
+                fresh_results = {}
 
-            # Step 4 — Save fresh results to Redis
-            if redis_client:
+            if cache_service and getattr(cache_service, "_client", None) is not None:
                 for ing, data in fresh_results.items():
-                    if data["found"]:
-                        self._set_cached(ing, data, redis_client)
+                    if data.get("found"):
+                        await self._set_cached_async(ing, data, cache_service)
 
-        # Step 5 — Merge cached + fresh results
         all_results = {**cached_results, **fresh_results}
 
-        # Build context string and sources list
         context_parts: list[str] = []
         all_sources: list[dict] = []
 
         for ing in searchable:
             result = all_results.get(ing)
-            if not result or not result["found"]:
+            if not result or not result.get("found"):
                 continue
-            context_parts.append(
-                f"=== {ing.upper()} ===\n{result['content']}"
-            )
-            all_sources.extend(result["sources"])
+            context_parts.append(f"=== {ing.upper()} ===\n{result['content']}")
+            all_sources.extend(result.get("sources", []))
 
-        # Deduplicate sources by URL
         seen: set[str] = set()
         unique_sources: list[dict] = []
         for s in all_sources:
-            if s["url"] not in seen:
-                seen.add(s["url"])
+            url = s.get("url", "")
+            if url and url not in seen:
+                seen.add(url)
                 unique_sources.append(s)
 
         context = "\n\n".join(context_parts)
         logger.info(
             f"Final context: {len(context)} chars, "
-            f"{len(unique_sources)} unique sources, "
-            f"Tavily calls used: "
-            f"{len(need_search) // 5 + (1 if need_search else 0)}"
+            f"{len(unique_sources)} unique sources"
         )
         return context, unique_sources
 
+    # ─── Main public method (Sync fallback) ───────────────
+
+    def fetch_context(
+        self,
+        ingredients: list[str],
+        redis_client=None,
+    ) -> tuple[str, list[dict]]:
+        """
+        Synchronous fallback method called from crew.py if pre-fetched context was not provided.
+        """
+        searchable = [
+            i for i in ingredients
+            if i.lower().strip() not in SKIP_SEARCH
+        ]
+        if not searchable:
+            return "", []
+
+        fresh_results = self._batch_search(searchable)
+        context_parts: list[str] = []
+        all_sources: list[dict] = []
+
+        for ing in searchable:
+            result = fresh_results.get(ing)
+            if not result or not result.get("found"):
+                continue
+            context_parts.append(f"=== {ing.upper()} ===\n{result['content']}")
+            all_sources.extend(result.get("sources", []))
+
+        seen: set[str] = set()
+        unique_sources: list[dict] = []
+        for s in all_sources:
+            url = s.get("url", "")
+            if url and url not in seen:
+                seen.add(url)
+                unique_sources.append(s)
+
+        return "\n\n".join(context_parts), unique_sources
+
 web_search_service = WebSearchService()
+

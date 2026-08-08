@@ -29,37 +29,33 @@ def _fallback_analysis_dict() -> dict[str, Any]:
     }
 
 
-def run_analysis(product_name: str, ingredients: list[str], health_profile: dict | None = None) -> dict[str, Any]:
+def run_analysis(
+    product_name: str,
+    ingredients: list[str],
+    health_profile: dict | None = None,
+    web_context: str = "",
+    sources: list[dict] | None = None,
+) -> dict[str, Any]:
     from crewai import Agent, Task, Crew, Process
     from app.services.web_search_service import web_search_service
     if not settings.groq_api_key.strip():
         logger.error("GROQ_API_KEY is not set; cannot run ingredient crew")
         return _fallback_analysis_dict()
 
+    if sources is None:
+        sources = []
+
     ingredients_str = ", ".join(ingredients)
 
     logger.info("Starting 2-agent CrewAI analysis for: {}", product_name)
 
-    from app.services.cache_service import cache
-    
-    # Get Redis client for ingredient caching
-    redis_client = cache._client  # raw redis client
-    
-    logger.info(
-        f"Fetching web context for {len(ingredients)} ingredients"
-    )
-    try:
-        web_context, sources = web_search_service.fetch_context(
-            ingredients,
-            redis_client=redis_client,  # pass redis client
-        )
-        logger.info(
-            f"Web context ready: {len(web_context)} chars, "
-            f"{len(sources)} sources"
-        )
-    except Exception as e:
-        logger.warning(f"Web search skipped: {e}")
-        web_context, sources = "", []
+    # If web_context wasn't pre-fetched asynchronously, attempt sync fallback
+    if not web_context and not sources:
+        try:
+            web_context, sources = web_search_service.fetch_context(ingredients)
+        except Exception as e:
+            logger.warning(f"Sync fallback web search skipped: {e}")
+            web_context, sources = "", []
 
     analyzer, formatter = get_agents(settings)
     analyze_task, format_task = get_tasks(

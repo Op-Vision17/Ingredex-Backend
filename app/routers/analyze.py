@@ -6,13 +6,14 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.ai.preprocessor import compute_ingredients_hash, normalize_ingredients
+from app.ai.preprocessor import compute_analysis_cache_key, normalize_ingredients
 from app.database import get_db
 from app.dependencies import get_current_user
 from app.models.product_scan import ProductScan
 from app.models.user import User
 from app.schemas.analysis import AnalysisResult, AnalyzeRequest, AnalyzeResponse
 from app.services.cache_service import cache
+from app.services.web_search_service import web_search_service
 from app.utils.logger import logger
 
 router = APIRouter()
@@ -42,21 +43,21 @@ async def analyze_ingredients(
             detail="No recognizable ingredients after normalization.",
         )
 
-    ingredients_hash = compute_ingredients_hash(normalized)
+    analysis_cache_key = compute_analysis_cache_key(normalized, current_user.health_profile)
     logger.debug(
-        "Normalized {} ingredients, hash={}",
+        "Normalized {} ingredients, cache_key={}",
         len(normalized),
-        ingredients_hash,
+        analysis_cache_key,
     )
 
     try:
-        cached = await cache.get_cached_analysis_by_hash(ingredients_hash)
+        cached = await cache.get_cached_analysis_by_hash(analysis_cache_key)
     except RuntimeError:
         logger.warning("Redis unavailable; skipping analysis cache read")
         cached = None
 
     if cached is not None:
-        logger.info("Analysis served from cache for hash={}", ingredients_hash)
+        logger.info("Analysis served from cache for key={}", analysis_cache_key)
         try:
             analysis = AnalysisResult.model_validate(cached)
         except Exception as exc:
@@ -71,7 +72,16 @@ async def analyze_ingredients(
             scan_id=None,
         )
 
-    logger.info("Analysis cache miss — running CrewAI pipeline")
+    logger.info("Analysis cache miss — fetching web search context & running CrewAI pipeline")
+    try:
+        web_context, sources = await web_search_service.fetch_context_async(
+            normalized,
+            cache_service=cache,
+        )
+    except Exception as exc:
+        logger.warning("Failed to fetch web search context asynchronously: {}", exc)
+        web_context, sources = "", []
+
     try:
         from app.ai.crew import run_analysis
 
@@ -80,6 +90,8 @@ async def analyze_ingredients(
             body.product_name or "",
             normalized,
             current_user.health_profile,
+            web_context,
+            sources,
         )
     except Exception as exc:
         logger.exception("Crew analysis failed: {}", exc)
@@ -111,7 +123,7 @@ async def analyze_ingredients(
     logger.info("Saved ProductScan id={} for user_id={}", scan.id, current_user.id)
 
     try:
-        await cache.cache_analysis_result(ingredients_hash, analysis.model_dump())
+        await cache.cache_analysis_result(analysis_cache_key, analysis.model_dump())
     except RuntimeError:
         logger.warning("Could not cache analysis result (Redis unavailable)")
 

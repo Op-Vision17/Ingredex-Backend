@@ -71,3 +71,20 @@ def compute_ingredients_hash(ingredients: list[str]) -> str:
     canonical = sorted(ingredients)
     joined = ",".join(canonical)
     return hashlib.md5(joined.encode("utf-8")).hexdigest()
+
+
+def compute_analysis_cache_key(ingredients: list[str], health_profile: dict | None = None) -> str:
+    """
+    Compute a cache key that combines ingredient hash with health profile hash.
+
+    This prevents cross-user personalization cache poisoning where User A's
+    allergy/condition warnings would be served to User B.
+    """
+    import json
+    ing_hash = compute_ingredients_hash(ingredients)
+    if not health_profile:
+        return f"{ing_hash}:default"
+    profile_str = json.dumps(health_profile, sort_keys=True)
+    profile_hash = hashlib.md5(profile_str.encode("utf-8")).hexdigest()
+    return f"{ing_hash}:{profile_hash}"
+

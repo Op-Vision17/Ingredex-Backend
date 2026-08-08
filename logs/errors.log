@@ -3965,3 +3965,671 @@ Traceback (most recent call last):
           └ <class 'groq.APIConnectionError'>
 
 groq.APIConnectionError: Connection error.
+2026-04-12 17:01:32.293 | ERROR    | - | Unhandled exception POST /auth/verify-otp: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column users.health_profile does not exist
+[SQL: SELECT users.id, users.phone, users.email, users.is_active, users.created_at, users.updated_at, users.health_profile 
+FROM users 
+WHERE users.email = $1::VARCHAR]
+[parameters: ('guptaarjun1711@gmail.com',)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 526, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                      │                └ <function AsyncAdapt_asyncpg_connection._prepare at 0x0000025A9769A200>
+                                      └ <AdaptedConnection <asyncpg.connection.Connection object at 0x0000025A98E0D030>>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 773, in _prepare
+    prepared_stmt = await self._connection.prepare(
+                          │    └ <member '_connection' of 'AdaptedConnection' objects>
+                          └ <AdaptedConnection <asyncpg.connection.Connection object at 0x0000025A98E0D030>>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\asyncpg\connection.py", line 636, in prepare
+    return await self._prepare(
+                 │    └ <function Connection._prepare at 0x0000025A97799580>
+                 └ <asyncpg.connection.Connection object at 0x0000025A98E0D030>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\asyncpg\connection.py", line 654, in _prepare
+    stmt = await self._get_statement(
+                 │    └ <function Connection._get_statement at 0x0000025A97799260>
+                 └ <asyncpg.connection.Connection object at 0x0000025A98E0D030>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\asyncpg\connection.py", line 433, in _get_statement
+    statement = await self._protocol.prepare(
+                      │    └ <member '_protocol' of 'Connection' objects>
+                      └ <asyncpg.connection.Connection object at 0x0000025A98E0D030>
+  File "asyncpg\protocol\protocol.pyx", line 166, in prepare
+    return await waiter
+
+asyncpg.exceptions.UndefinedColumnError: column users.health_profile does not exist
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x0000025A97084860>
+    │    └ <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x0000025A975403D0>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000025A9A327950>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ('guptaarjun1711@gmail.com',)
+    │      │       └ 'SELECT users.id, users.phone, users.email, users.is_active, users.created_at, users.updated_at, users.health_profile \nFROM ...
+    │      └ <function AsyncAdapt_asyncpg_cursor.execute at 0x0000025A97699580>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025A98D93A60>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025A98D93A60>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025A98DE5D80>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x0000025A98E189C0 (otid=0x0000025A95A45B00) dead>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025A98DE5D80>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    │    └ <function AsyncAdapt_asyncpg_cursor._handle_exception at 0x0000025A976993A0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025A98D93A60>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    │    │                                   └ UndefinedColumnError('column users.health_profile does not exist')
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025A98D93A60>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+          │                     └ UndefinedColumnError('column users.health_profile does not exist')
+          └ ProgrammingError("<class 'asyncpg.exceptions.UndefinedColumnError'>: column users.health_profile does not exist")
+
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedColumnError'>: column users.health_profile does not exist
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 352
+               │     └ 3
+               └ <function _main at 0x0000025A92562D40>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 352
+           │    └ <function BaseProcess._bootstrap at 0x0000025A922A04A0>
+           └ <SpawnProcess name='SpawnProcess-1' parent=8828 started>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x0000025A922939C0>
+    └ <SpawnProcess name='SpawnProcess-1' parent=8828 started>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x0000025A9468AE90>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-1' parent=8828 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-1' parent=8828 started>
+    │    └ <function subprocess_started at 0x0000025A946E1F80>
+    └ <SpawnProcess name='SpawnProcess-1' parent=8828 started>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=752, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x0000025A94879ED0>>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           │       │   │    │             └ [<socket.socket fd=752, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>]
+           │       │   │    └ <function Server.serve at 0x0000025A946E0EA0>
+           │       │   └ <uvicorn.server.Server object at 0x0000025A94879ED0>
+           │       └ <function run at 0x0000025A93F14720>
+           └ <module 'asyncio' from 'C:\\Users\\gupta\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\asyncio\\__init__.py'>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 190, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x0000025A947CB3D0>
+           │      └ <function Runner.run at 0x0000025A93F62160>
+           └ <asyncio.runners.Runner object at 0x0000025A948792D0>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x0000025A93F5FC40>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x0000025A948792D0>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 641, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x0000025A93F5FBA0>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 608, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x0000025A93F619E0>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 1936, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x0000025A93EEDB20>
+    └ <Handle Task.task_wakeup(<Future cancelled>)>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future cancelled>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future cancelled>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future cancelled>)>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 401, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+                   └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x0000025A98815B50>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+                 │    │   │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.httptools_impl.RequestResponseCycle object at 0x0000025A9A...
+                 │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.httptools_impl.RequestResponseCycle object at 0x0000025...
+                 │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+                 │    └ <fastapi.applications.FastAPI object at 0x0000025A982083D0>
+                 └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x0000025A98815B50>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.httptools_impl.RequestResponseCycle object at 0x0000025A9A...
+                           │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.httptools_impl.RequestResponseCycle object at 0x0000025...
+                           └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.httptools_impl.RequestResponseCycle object at 0x0000025A9A...
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.httptools_impl.RequestResponseCycle object at 0x0000025...
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000025A98E092D0>
+          └ <fastapi.applications.FastAPI object at 0x0000025A982083D0>
+> File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+          │    │   │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x0000025A98DD5940>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.httptools_impl.RequestResponseCycle object at 0x0000025...
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <app.main.RequestIDMiddleware object at 0x0000025A98DCB790>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000025A98E092D0>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\base.py", line 189, in __call__
+    with collapse_excgroups():
+         └ <function collapse_excgroups at 0x0000025A957B96C0>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+    │    │   │     │    │      └ <traceback object at 0x0000025A9A338900>
+    │    │   │     │    └ ExceptionGroup('unhandled errors in a TaskGroup', [ProgrammingError("(sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError...
+    │    │   │     └ <class 'ExceptionGroup'>
+    │    │   └ <method 'throw' of 'generator' objects>
+    │    └ <generator object collapse_excgroups at 0x0000025A9A30E880>
+    └ <contextlib._GeneratorContextManager object at 0x0000025A98E8B9D0>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\_utils.py", line 93, in collapse_excgroups
+    raise exc
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    response = await self.dispatch_func(request, call_next)
+                     │    │             │        └ <function BaseHTTPMiddleware.__call__.<locals>.call_next at 0x0000025A9A2FC0E0>
+                     │    │             └ <starlette.middleware.base._CachedRequest object at 0x0000025A9A2DFFD0>
+                     │    └ <bound method RequestIDMiddleware.dispatch of <app.main.RequestIDMiddleware object at 0x0000025A98DCB790>>
+                     └ <app.main.RequestIDMiddleware object at 0x0000025A98DCB790>
+
+  File "C:\VISION\Ingredex\ingredex-backend\app\main.py", line 31, in dispatch
+    response = await call_next(request)
+                     │         └ <starlette.middleware.base._CachedRequest object at 0x0000025A9A2DFFD0>
+                     └ <function BaseHTTPMiddleware.__call__.<locals>.call_next at 0x0000025A9A2FC0E0>
+
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\base.py", line 165, in call_next
+    raise app_exc
+          └ ProgrammingError("(sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>...
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\base.py", line 151, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+          │    │   │      │                      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x0000025A9A30A660>
+          │    │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000025A9A30A840>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <starlette.middleware.cors.CORSMiddleware object at 0x0000025A9824CD50>
+          └ <app.main.RequestIDMiddleware object at 0x0000025A98DCB790>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+          │    │               │      │        │                     └ Headers({'host': 'localhost:8000', 'connection': 'keep-alive', 'content-length': '60', 'sec-ch-ua-platform': '"Windows"', 'us...
+          │    │               │      │        └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x0000025A9A30A660>
+          │    │               │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000025A9A30A840>
+          │    │               └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <function CORSMiddleware.simple_response at 0x0000025A95892840>
+          └ <starlette.middleware.cors.CORSMiddleware object at 0x0000025A9824CD50>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+          │    │   │      │        └ functools.partial(<bound method CORSMiddleware.send of <starlette.middleware.cors.CORSMiddleware object at 0x0000025A9824CD50...
+          │    │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000025A9A30A840>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000025A94A51F10>
+          └ <starlette.middleware.cors.CORSMiddleware object at 0x0000025A9824CD50>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ functools.partial(<bound method CORSMiddleware.send of <starlette.middleware.cors.CORSMiddleware object at 0x0000025A9824CD50...
+          │                            │    │    │     │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000025A9A30A840>
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │                            │    │    └ <starlette.requests.Request object at 0x0000025A98E6EE10>
+          │                            │    └ <fastapi.routing.APIRouter object at 0x0000025A959CDBD0>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000025A94A51F10>
+          └ <function wrap_app_handling_exceptions at 0x0000025A95826DE0>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025A98E69B20>
+          │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000025A9A30A840>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          └ <fastapi.routing.APIRouter object at 0x0000025A959CDBD0>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025A98E69B20>
+          │    │                │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000025A9A30A840>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x0000025A959CDBD0>>
+          └ <fastapi.routing.APIRouter object at 0x0000025A959CDBD0>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025A98E69B20>
+          │     │      │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000025A9A30A840>
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │     └ <function Route.handle at 0x0000025A95854400>
+          └ APIRoute(path='/auth/verify-otp', name='verify_otp_endpoint', methods=['POST'])
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025A98E69B20>
+          │    │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000025A9A30A840>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <function request_response.<locals>.app at 0x0000025A98D9BF60>
+          └ APIRoute(path='/auth/verify-otp', name='verify_otp_endpoint', methods=['POST'])
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025A98E69B20>
+          │                            │    │        │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000025A9A30A840>
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │                            │    └ <starlette.requests.Request object at 0x0000025A98E6FB10>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x0000025A98E69620>
+          └ <function wrap_app_handling_exceptions at 0x0000025A95826DE0>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025A98E69BC0>
+          │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000025A9A30A840>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.4'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          └ <function request_response.<locals>.app.<locals>.app at 0x0000025A98E69620>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+                     │    └ <starlette.requests.Request object at 0x0000025A98E6FB10>
+                     └ <function get_request_handler.<locals>.app at 0x0000025A98D9BE20>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                         └ <function run_endpoint_function at 0x0000025A91F91760>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+                 │         │      └ {'db': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x0000025A98E6FA10>, 'body': VerifyOTPRequest(email='guptaarjun...
+                 │         └ <function verify_otp_endpoint at 0x0000025A9820FF60>
+                 └ <fastapi.dependencies.models.Dependant object at 0x0000025A98DD9B50>
+
+  File "C:\VISION\Ingredex\ingredex-backend\app\routers\auth.py", line 85, in verify_otp_endpoint
+    user, is_new_user = await get_or_create_user(db, email)
+                              │                  │   └ 'guptaarjun1711@gmail.com'
+                              │                  └ <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x0000025A98E6FA10>
+                              └ <function get_or_create_user at 0x0000025A981FFCE0>
+
+  File "C:\VISION\Ingredex\ingredex-backend\app\services\auth_service.py", line 31, in get_or_create_user
+    result = await db.execute(stmt)
+                   │  │       └ <sqlalchemy.sql.selectable.Select object at 0x0000025A98E1B150>
+                   │  └ <function AsyncSession.execute at 0x0000025A97494D60>
+                   └ <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x0000025A98E6FA10>
+
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+                   └ <function greenlet_spawn at 0x0000025A95A37600>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             │       │      │   └ <built-in function exc_info>
+             │       │      └ <module 'sys' (built-in)>
+             │       └ <method 'throw' of 'greenlet.greenlet' objects>
+             └ <_AsyncIoGreenlet object at 0x0000025A98E189C0 (otid=0x0000025A95A45B00) dead>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           │    └ <function Session._execute_internal at 0x0000025A973BFB00>
+           └ <sqlalchemy.orm.session.Session object at 0x0000025A98E6E550>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                   │      │                 └ <classmethod(<function AbstractORMCompileState.orm_execute_statement at 0x0000025A97202C00>)>
+                   │      └ <class 'sqlalchemy.orm.context.ORMSelectCompileState'>
+                   └ typing.Any
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             │    └ <function Connection.execute at 0x0000025A96FB0E00>
+             └ <sqlalchemy.engine.base.Connection object at 0x0000025A9A327950>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           └ <bound method ClauseElement._execute_on_connection of <sqlalchemy.sql.selectable.Select object at 0x0000025A98E1B150>>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           │          └ <function Connection._execute_clauseelement at 0x0000025A96FB1120>
+           └ <sqlalchemy.engine.base.Connection object at 0x0000025A9A327950>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          │    └ <function Connection._execute_context at 0x0000025A96FB1300>
+          └ <sqlalchemy.engine.base.Connection object at 0x0000025A9A327950>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           │    └ <function Connection._exec_single_context at 0x0000025A96FB13A0>
+           └ <sqlalchemy.engine.base.Connection object at 0x0000025A9A327950>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    │    └ <function Connection._handle_dbapi_exception at 0x0000025A96FB1620>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000025A9A327950>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+          │                    │              │                 └ ProgrammingError("<class 'asyncpg.exceptions.UndefinedColumnError'>: column users.health_profile does not exist")
+          │                    │              └ (<class 'sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError'>, ProgrammingError("<class 'asyncp...
+          │                    └ <method 'with_traceback' of 'BaseException' objects>
+          └ ProgrammingError("(sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>...
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x0000025A97084860>
+    │    └ <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x0000025A975403D0>
+    └ <sqlalchemy.engine.base.Connection object at 0x0000025A9A327950>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ('guptaarjun1711@gmail.com',)
+    │      │       └ 'SELECT users.id, users.phone, users.email, users.is_active, users.created_at, users.updated_at, users.health_profile \nFROM ...
+    │      └ <function AsyncAdapt_asyncpg_cursor.execute at 0x0000025A97699580>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025A98D93A60>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025A98D93A60>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025A98DE5D80>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x0000025A98E189C0 (otid=0x0000025A95A45B00) dead>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object AsyncAdapt_asyncpg_cursor._prepare_and_execute at 0x0000025A98DE5D80>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    │    └ <function AsyncAdapt_asyncpg_cursor._handle_exception at 0x0000025A976993A0>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025A98D93A60>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    │    │                                   └ UndefinedColumnError('column users.health_profile does not exist')
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_asyncpg_cursor' objects>
+    └ <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x0000025A98D93A60>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+          │                     └ UndefinedColumnError('column users.health_profile does not exist')
+          └ ProgrammingError("<class 'asyncpg.exceptions.UndefinedColumnError'>: column users.health_profile does not exist")
+
+sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column users.health_profile does not exist
+[SQL: SELECT users.id, users.phone, users.email, users.is_active, users.created_at, users.updated_at, users.health_profile 
+FROM users 
+WHERE users.email = $1::VARCHAR]
+[parameters: ('guptaarjun1711@gmail.com',)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-08-08 18:20:53.872 | ERROR    | - | Redis cache connect failed; API will run without cache until Redis is up
+Traceback (most recent call last):
+
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpx\_transports\default.py", line 72, in map_httpcore_exceptions
+    yield
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpx\_transports\default.py", line 377, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+                 │    │     │                    └ <Request [b'POST']>
+                 │    │     └ <function AsyncConnectionPool.handle_async_request at 0x0000025EC84B8360>
+                 │    └ <AsyncConnectionPool [Requests: 0 active, 0 queued | Connections: 0 active, 0 idle]>
+                 └ <httpx.AsyncHTTPTransport object at 0x0000025EC969D450>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+                     │          └ <function AsyncHTTPConnection.handle_async_request at 0x0000025EC84A36A0>
+                     └ <AsyncHTTPConnection [CONNECTION FAILED]>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpcore\_async\connection.py", line 101, in handle_async_request
+    raise exc
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpcore\_async\connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+                   │    │        └ <Request [b'POST']>
+                   │    └ <function AsyncHTTPConnection._connect at 0x0000025EC84A3740>
+                   └ <AsyncHTTPConnection [CONNECTION FAILED]>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpcore\_async\connection.py", line 124, in _connect
+    stream = await self._network_backend.connect_tcp(**kwargs)
+                   │    │                │             └ {'host': 'known-marlin-94744.upstash.io', 'port': 443, 'local_address': None, 'timeout': None, 'socket_options': None}
+                   │    │                └ <function AutoBackend.connect_tcp at 0x0000025EC84A1800>
+                   │    └ <httpcore._backends.auto.AutoBackend object at 0x0000025EC96570D0>
+                   └ <AsyncHTTPConnection [CONNECTION FAILED]>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpcore\_backends\auto.py", line 31, in connect_tcp
+    return await self._backend.connect_tcp(
+                 │    │        └ <function AnyIOBackend.connect_tcp at 0x0000025EC84BAF20>
+                 │    └ <httpcore.AnyIOBackend object at 0x0000025EC96DCA50>
+                 └ <httpcore._backends.auto.AutoBackend object at 0x0000025EC96570D0>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpcore\_backends\anyio.py", line 113, in connect_tcp
+    with map_exceptions(exc_map):
+         │              └ {<class 'TimeoutError'>: <class 'httpcore.ConnectTimeout'>, <class 'OSError'>: <class 'httpcore.ConnectError'>, <class 'anyio...
+         └ <function map_exceptions at 0x0000025EC8416A20>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+    │    │   │     │    │      └ <traceback object at 0x0000025ECAA12380>
+    │    │   │     │    └ gaierror(11001, 'getaddrinfo failed')
+    │    │   │     └ <class 'socket.gaierror'>
+    │    │   └ <method 'throw' of 'generator' objects>
+    │    └ <generator object map_exceptions at 0x0000025ECAA18040>
+    └ <contextlib._GeneratorContextManager object at 0x0000025ECAA110D0>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+          └ <class 'httpcore.ConnectError'>
+
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 188
+               │     └ 3
+               └ <function _main at 0x0000025EC2E12DE0>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 188
+           │    └ <function BaseProcess._bootstrap at 0x0000025EC2B50540>
+           └ <SpawnProcess name='SpawnProcess-1' parent=19092 started>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x0000025EC2B43A60>
+    └ <SpawnProcess name='SpawnProcess-1' parent=19092 started>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x0000025EC2DE9CD0>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-1' parent=19092 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-1' parent=19092 started>
+    │    └ <function subprocess_started at 0x0000025EC4F8C720>
+    └ <SpawnProcess name='SpawnProcess-1' parent=19092 started>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=180, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x0000025EC51083D0>>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           │       │   │    │             └ [<socket.socket fd=180, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>]
+           │       │   │    └ <function Server.serve at 0x0000025EC4F676A0>
+           │       │   └ <uvicorn.server.Server object at 0x0000025EC51083D0>
+           │       └ <function run at 0x0000025EC31E6CA0>
+           └ <module 'asyncio' from 'C:\\Users\\gupta\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\asyncio\\__init__.py'>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 190, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x0000025EC5053C40>
+           │      └ <function Runner.run at 0x0000025EC324C720>
+           └ <asyncio.runners.Runner object at 0x0000025EC50FFD10>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x0000025EC3246200>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x0000025EC50FFD10>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 641, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x0000025EC3246160>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 608, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x0000025EC3247F60>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 1936, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x0000025EC31E00E0>
+    └ <Handle Task.task_wakeup(<Future finis...info failed')>)>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\asyncio\events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future finis...info failed')>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future finis...info failed')>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future finis...info failed')>)>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\uvicorn\lifespan\on.py", line 86, in main
+    await app(scope, self.receive, self.send)
+          │   │      │    │        │    └ <function LifespanOn.send at 0x0000025EC529F560>
+          │   │      │    │        └ <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>
+          │   │      │    └ <function LifespanOn.receive at 0x0000025EC529F600>
+          │   │      └ <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>
+          │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x0000025EC5110550>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+                 │    │   │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+                 │    │   │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+                 │    │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+                 │    └ <fastapi.applications.FastAPI object at 0x0000025EC8CCA710>
+                 └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x0000025EC5110550>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+                           │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+                           └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │                │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │                └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000025EC9689550>
+          └ <fastapi.applications.FastAPI object at 0x0000025EC8CCA710>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\errors.py", line 151, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │   │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <app.main.RequestIDMiddleware object at 0x0000025EC9688E50>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000025EC9689550>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\base.py", line 103, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │   │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <starlette.middleware.cors.CORSMiddleware object at 0x0000025EC9688F90>
+          └ <app.main.RequestIDMiddleware object at 0x0000025EC9688E50>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\cors.py", line 77, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │   │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000025EC9668710>
+          └ <starlette.middleware.cors.CORSMiddleware object at 0x0000025EC9688F90>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\middleware\exceptions.py", line 51, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │   │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │   └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <fastapi.routing.APIRouter object at 0x0000025EC963E510>
+          └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000025EC9668710>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │                │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │                └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x0000025EC963E510>>
+          └ <fastapi.routing.APIRouter object at 0x0000025EC963E510>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\routing.py", line 765, in app
+    await self.lifespan(scope, receive, send)
+          │    │        │      │        └ <bound method LifespanOn.send of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │        │      └ <bound method LifespanOn.receive of <uvicorn.lifespan.on.LifespanOn object at 0x0000025EC5110350>>
+          │    │        └ {'type': 'lifespan', 'asgi': {'version': '3.0', 'spec_version': '2.0'}, 'state': {}, 'app': <fastapi.applications.FastAPI obj...
+          │    └ <function Router.lifespan at 0x0000025EC60B0220>
+          └ <fastapi.routing.APIRouter object at 0x0000025EC963E510>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\starlette\routing.py", line 732, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               │    │                └ <fastapi.applications.FastAPI object at 0x0000025EC8CCA710>
+               │    └ <function lifespan at 0x0000025EC966C180>
+               └ <fastapi.routing.APIRouter object at 0x0000025EC963E510>
+
+> File "C:\VISION\Ingredex\ingredex-backend\app\main.py", line 47, in lifespan
+    await cache.connect()
+          │     └ <function CacheService.connect at 0x0000025EC824E160>
+          └ <app.services.cache_service.CacheService object at 0x0000025EC82986D0>
+
+  File "C:\VISION\Ingredex\ingredex-backend\app\services\cache_service.py", line 104, in connect
+    await client.ping()
+          │      └ <function Commands.ping at 0x0000025EC824FB00>
+          └ <upstash_redis.asyncio.client.Redis object at 0x0000025EC9686050>
+
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\upstash_redis\asyncio\client.py", line 140, in execute
+    res = await self._http.execute(
+                │    │     └ <function AsyncHttpClient.execute at 0x0000025EC8A2F7E0>
+                │    └ <upstash_redis.http.AsyncHttpClient object at 0x0000025EC96895D0>
+                └ <upstash_redis.asyncio.client.Redis object at 0x0000025EC9686050>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\upstash_redis\http.py", line 158, in execute
+    raise last_error
+          └ ConnectError('[Errno 11001] getaddrinfo failed')
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\upstash_redis\http.py", line 140, in execute
+    r = await self._client.post(url, headers=headers, json=command)
+              │    │       │    │            │             └ ['PING']
+              │    │       │    │            └ {'Authorization': 'Bearer gQAAAAAAAXIYAAIncDFhYjgzYzk2YjU3ZTc0MDFkYjFlNTViODM1NmY0MjdkY3AxOTQ3NDQ', 'Upstash-Encoding': 'base...
+              │    │       │    └ 'https://known-marlin-94744.upstash.io'
+              │    │       └ <function AsyncClient.post at 0x0000025EC84EECA0>
+              │    └ <httpx.AsyncClient object at 0x0000025EC968BC10>
+              └ <upstash_redis.http.AsyncHttpClient object at 0x0000025EC96895D0>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpx\_client.py", line 1905, in post
+    return await self.request(
+                 │    └ <function AsyncClient.request at 0x0000025EC84EE660>
+                 └ <httpx.AsyncClient object at 0x0000025EC968BC10>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpx\_client.py", line 1585, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+                 │    │    │             │                      └ <httpx._client.UseClientDefault object at 0x0000025EC83F3250>
+                 │    │    │             └ <httpx._client.UseClientDefault object at 0x0000025EC83F3250>
+                 │    │    └ <Request('POST', 'https://known-marlin-94744.upstash.io')>
+                 │    └ <function AsyncClient.send at 0x0000025EC84EE840>
+                 └ <httpx.AsyncClient object at 0x0000025EC968BC10>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpx\_client.py", line 1674, in send
+    response = await self._send_handling_auth(
+                     │    └ <function AsyncClient._send_handling_auth at 0x0000025EC84EE8E0>
+                     └ <httpx.AsyncClient object at 0x0000025EC968BC10>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpx\_client.py", line 1702, in _send_handling_auth
+    response = await self._send_handling_redirects(
+                     │    └ <function AsyncClient._send_handling_redirects at 0x0000025EC84EE980>
+                     └ <httpx.AsyncClient object at 0x0000025EC968BC10>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpx\_client.py", line 1739, in _send_handling_redirects
+    response = await self._send_single_request(request)
+                     │    │                    └ <Request('POST', 'https://known-marlin-94744.upstash.io')>
+                     │    └ <function AsyncClient._send_single_request at 0x0000025EC84EEA20>
+                     └ <httpx.AsyncClient object at 0x0000025EC968BC10>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpx\_client.py", line 1776, in _send_single_request
+    response = await transport.handle_async_request(request)
+                     │         │                    └ <Request('POST', 'https://known-marlin-94744.upstash.io')>
+                     │         └ <function AsyncHTTPTransport.handle_async_request at 0x0000025EC84BB920>
+                     └ <httpx.AsyncHTTPTransport object at 0x0000025EC969D450>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpx\_transports\default.py", line 376, in handle_async_request
+    with map_httpcore_exceptions():
+         └ <function map_httpcore_exceptions at 0x0000025EC84147C0>
+  File "C:\Users\gupta\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+    │    │   │     │    │      └ <traceback object at 0x0000025ECAA12400>
+    │    │   │     │    └ ConnectError(gaierror(11001, 'getaddrinfo failed'))
+    │    │   │     └ <class 'httpcore.ConnectError'>
+    │    │   └ <method 'throw' of 'generator' objects>
+    │    └ <generator object map_httpcore_exceptions at 0x0000025EC9672F40>
+    └ <contextlib._GeneratorContextManager object at 0x0000025ECAA11590>
+  File "C:\Users\gupta\AppData\Local\pypoetry\Cache\virtualenvs\ingredex-y5P36i2O-py3.11\Lib\site-packages\httpx\_transports\default.py", line 89, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+          │          └ '[Errno 11001] getaddrinfo failed'
+          └ <class 'httpx.ConnectError'>
+
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
