@@ -8,15 +8,10 @@ import re
 from langchain_core.messages import HumanMessage
 from langchain_groq import ChatGroq
 
+from app.ai.prompts import OCR_EXTRACTION_PROMPT
 from app.config import settings
 from app.utils.logger import logger
 
-_EXTRACTION_PROMPT = """You are an ingredient extraction specialist. 
-Look at this food product image carefully.
-Extract ONLY the ingredients list text exactly as written on the packaging.
-If you find an ingredients list, return just the raw ingredients text.
-If no ingredients list is visible, return 'NO_INGREDIENTS_FOUND'.
-Do not add any explanation, just the ingredients text."""
 
 
 def _guess_image_mime(image_bytes: bytes) -> str:
@@ -77,7 +72,7 @@ async def extract_text_from_image(image_bytes: bytes) -> dict:
 
     message = HumanMessage(
         content=[
-            {"type": "text", "text": _EXTRACTION_PROMPT},
+            {"type": "text", "text": OCR_EXTRACTION_PROMPT},
             {
                 "type": "image_url",
                 "image_url": {"url": data_url},

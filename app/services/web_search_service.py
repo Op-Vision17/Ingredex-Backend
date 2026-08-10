@@ -1,8 +1,11 @@
+import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tavily import TavilyClient
+
+from app.ai.prompts import WEB_SEARCH_QUERY_TEMPLATE
 from app.config import settings
 from app.utils.logger import logger
-import json
+
 
 TRUSTED_DOMAINS = [
     # International
@@ -119,10 +122,7 @@ class WebSearchService:
     # ─── Batch search ─────────────────────────────────────
 
     def _search_single_batch(self, batch: list[str]) -> dict[str, dict]:
-        batch_query = (
-            " ".join(batch)
-            + " food safety health effects risks benefits"
-        )
+        batch_query = WEB_SEARCH_QUERY_TEMPLATE.format(ingredients=" ".join(batch))
         logger.info(
             f"Tavily batch search: {batch} "
             f"(1 call for {len(batch)} ingredients)"
@@ -156,9 +156,8 @@ class WebSearchService:
                             f"[Source: {url}]\n"
                             f"{snippet}"
                         )
-                        domain = (
-                            url.split("/")[2] if url else ""
-                        )
+                        raw_domain = url.split("/")[2] if (url and len(url.split("/")) > 2) else ""
+                        domain = raw_domain.lower().replace("www.", "")
                         matched_sources.append({
                             "title": r.get("title", ""),
                             "url": url,

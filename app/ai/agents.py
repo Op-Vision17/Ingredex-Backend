@@ -6,6 +6,14 @@ import os
 
 from crewai import Agent, LLM
 
+from app.ai.prompts import (
+    ANALYZER_BACKSTORY,
+    ANALYZER_GOAL,
+    ANALYZER_ROLE,
+    FORMATTER_BACKSTORY,
+    FORMATTER_GOAL,
+    FORMATTER_ROLE,
+)
 from app.config import Settings
 
 
@@ -18,25 +26,20 @@ def get_agents(settings: Settings) -> tuple[Agent, Agent]:
     )
 
     analyzer = Agent(
-        role="Food Ingredient Analyst",
-        goal="Classify ingredients, identify health risks and benefits",
-        backstory="""You are an expert food scientist and toxicologist who evaluates food ingredients. 
-        You use an extremely stringent, objective methodology. You deeply understand food additives,
-        preservatives, colorants, sweeteners and their health impacts. You strictly flag risky ingredients 
-        like TBHQ, BHA, BHT, High-Fructose Corn Syrup (HFCS), artificial dyes (e.g. Red 40), and trans fats.
-        You deduct points scientifically and logically based on peer-reviewed health impacts rather than guessing.""",
+        role=ANALYZER_ROLE,
+        goal=ANALYZER_GOAL,
+        backstory=ANALYZER_BACKSTORY,
         llm=llm,
         verbose=False,
     )
 
     formatter = Agent(
-        role="Health Report Formatter",
-        goal="Compile ingredient analysis into strict JSON health report",
-        backstory="""You are a data specialist who takes ingredient analysis
-        and formats it into clean, structured JSON. You always output valid
-        JSON with no markdown, no code blocks.""",
+        role=FORMATTER_ROLE,
+        goal=FORMATTER_GOAL,
+        backstory=FORMATTER_BACKSTORY,
         llm=llm,
         verbose=False,
     )
 
     return analyzer, formatter
+
