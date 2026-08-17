@@ -18,10 +18,16 @@ from app.config import Settings
 
 
 def get_agents(settings: Settings) -> tuple[Agent, Agent]:
-    os.environ["GROQ_API_KEY"] = settings.groq_api_key
+    clean_key = settings.groq_api_key.strip()
+    os.environ["GROQ_API_KEY"] = clean_key
+
+    model_name = settings.groq_model.strip() or "groq/llama-3.1-8b-instant"
+    if not model_name.startswith("groq/"):
+        model_name = f"groq/{model_name}"
 
     llm = LLM(
-        model="groq/llama-3.3-70b-versatile",
+        model=model_name,
+        api_key=clean_key,
         temperature=0.1,
     )
 

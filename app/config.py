@@ -39,6 +39,10 @@ class Settings(BaseSettings):
         description="Refresh token lifetime in days",
     )
     groq_api_key: str = Field(default="", description="Groq API key for LLM and vision")
+    groq_model: str = Field(
+        default="groq/llama-3.1-8b-instant",
+        description="Groq LLM model name for CrewAI (e.g. groq/llama-3.1-8b-instant or groq/llama-3.3-70b-versatile)",
+    )
     gemini_api_key: str = Field(
         default="",
         description="Optional Google Gemini API key (legacy; optional)",
