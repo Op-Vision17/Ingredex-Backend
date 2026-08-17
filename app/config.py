@@ -40,8 +40,8 @@ class Settings(BaseSettings):
     )
     groq_api_key: str = Field(default="", description="Groq API key for LLM and vision")
     groq_model: str = Field(
-        default="groq/llama-3.1-8b-instant",
-        description="Groq LLM model name for CrewAI (e.g. groq/llama-3.1-8b-instant or groq/llama-3.3-70b-versatile)",
+        default="groq/qwen/qwen3.6-27b",
+        description="Groq LLM model name for CrewAI (e.g. groq/qwen/qwen3.6-27b or groq/openai/gpt-oss-120b)",
     )
     gemini_api_key: str = Field(
         default="",
