@@ -1,7 +1,7 @@
 """add_health_profile_to_users
 
-Revision ID: 1d3dadb6450a
-Revises: 6a1f3c8d2e10
+Revision ID: 004
+Revises: 003
 Create Date: 2026-04-12 16:51:14.225757
 
 """
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '1d3dadb6450a'
-down_revision: Union[str, None] = '6a1f3c8d2e10'
+revision: str = '004'
+down_revision: Union[str, None] = '003'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

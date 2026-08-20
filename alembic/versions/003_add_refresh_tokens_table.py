@@ -1,7 +1,7 @@
 """Add refresh_tokens table for refresh JWT rotation.
 
-Revision ID: 6a1f3c8d2e10
-Revises: 4c7d2a1e9f00
+Revision ID: 003
+Revises: 002
 Create Date: 2026-03-22
 
 """
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
 
-revision: str = "6a1f3c8d2e10"
-down_revision: Union[str, None] = "4c7d2a1e9f00"
+revision: str = "003"
+down_revision: Union[str, None] = "002"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

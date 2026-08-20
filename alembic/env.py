@@ -53,12 +53,34 @@ def _normalize_sync_url(url: str) -> str:
     return url
 
 
+def process_revision_directives(context, revision, directives) -> None:
+    """Auto-generate sequential 3-digit revision numbers (001, 002, 003, ...)."""
+    if directives:
+        script = directives[0]
+        script_dir = context.script
+        heads = script_dir.get_heads()
+        if not heads:
+            new_rev_id = 1
+        else:
+            numeric_heads = []
+            for h in heads:
+                cleaned = h.lstrip("0")
+                if cleaned.isdigit() or h == "0":
+                    numeric_heads.append(int(cleaned or "0"))
+            if numeric_heads:
+                new_rev_id = max(numeric_heads) + 1
+            else:
+                new_rev_id = len(list(script_dir.walk_revisions())) + 1
+        script.rev_id = f"{new_rev_id:03d}"
+
+
 def do_run_migrations(connection) -> None:
     context.configure(
         connection=connection,
         target_metadata=target_metadata,
         compare_type=True,
         compare_server_default=True,
+        process_revision_directives=process_revision_directives,
     )
 
     with context.begin_transaction():
@@ -105,6 +127,7 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         compare_type=True,
+        process_revision_directives=process_revision_directives,
     )
 
     with context.begin_transaction():
