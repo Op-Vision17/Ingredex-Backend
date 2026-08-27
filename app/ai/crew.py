@@ -80,6 +80,7 @@ def run_analysis(
     result_text = ""
     try:
         raw_out = crew.kickoff()
+        result_text = str(raw_out).strip()
         # Robust JSON block extraction
         cleaned_text = result_text
         if "```" in cleaned_text:
@@ -114,6 +115,6 @@ def run_analysis(
             result_text[:200] if result_text else "",
         )
         return _fallback_analysis_dict()
-    except Exception:
-        logger.exception("CrewAI crew.kickoff() failed")
-        raise
+    except Exception as exc:
+        logger.warning("CrewAI crew execution failed: {}; returning fallback analysis", exc)
+        return _fallback_analysis_dict()
