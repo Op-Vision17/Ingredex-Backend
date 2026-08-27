@@ -106,11 +106,10 @@ Analyze the following product ingredients and produce the required JSON assessme
 
     models_to_try: list[tuple[str, str]] = []
     if gemini_key:
-        models_to_try.append(("gemini/gemini-3.6-flash", gemini_key))
+        models_to_try.append(("gemini/gemini-3.5-flash-lite", gemini_key))
+        models_to_try.append(("gemini/gemini-flash-latest", gemini_key))
     if groq_key:
         models_to_try.append(("groq/qwen/qwen3.8-27b", groq_key))
-    if gemini_key:
-        models_to_try.append(("gemini/gemini-flash-latest", gemini_key))
 
     for model_name, api_key in models_to_try:
         try:
@@ -121,7 +120,7 @@ Analyze the following product ingredients and produce the required JSON assessme
                 messages=[{"role": "user", "content": combined_prompt}],
                 temperature=0.1,
                 max_tokens=4096,
-                timeout=7.0,
+                timeout=12.0,
             )
             raw_text = response.choices[0].message.content or ""
             parsed = _extract_json_dict(raw_text)

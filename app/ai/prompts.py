@@ -52,26 +52,50 @@ def build_analyze_task_prompt(
     health_context: str,
     web_context: str = "",
 ) -> str:
-    """Build the analysis task prompt for the Senior Food Toxicologist agent."""
+    """Build the analysis task prompt with user-friendly language and deterministic scoring."""
     web_snippet = f"\nSCIENTIFIC EVIDENCE:\n{web_context}" if web_context else ""
 
-    return f"""Analyze food product "{product_name or 'Unknown Product'}":
+    return f"""You are a caring nutritional expert and food safety advisor.
 
-INGREDIENTS:
+Analyze the food product "{product_name or 'Scanned Product'}" for everyday consumers.
+
+INGREDIENTS LIST:
 {ingredients_str}
 
 {health_context}
 {web_snippet}
 
-RULES:
-1. Risk Tiers:
-   - High (-15 pts): BHA/BHT/TBHQ, artificial dyes (Red 40, Yellow 5/6), trans fats, HFCS, sodium nitrite.
-   - Medium (-5 pts): Artificial sweeteners (Aspartame, Sucralose), emulsifiers (Polysorbate 80), added sugar, MSG.
-   - Low: Citric acid, lecithin, baking soda.
-   - None: Whole foods, water, spices.
-2. Score calculation: Start 100, apply risk and profile penalties/bonuses. Clamp score 1-100.
-   - 75-100: Low risk | 40-74: Medium risk | 1-39: High risk.
-3. Summary: Mention score and profile conflicts using 'you/your'. Suggest 2 healthier alternatives."""
+SCIENTIFIC & DETERMINISTIC SCORING ALGORITHM (Score: 1 to 100):
+Start with Base Score = 100.
+Apply the following strict point deductions and bonuses:
+1. HARMFUL CHEMICALS & TOXIC ADDITIVES: Deduct -25 points each (e.g. INS 133 / Brilliant Blue, Tartrazine / Yellow 5, Red 40, TBHQ, BHA, BHT, Potassium Bromate, Trans Fats, Hydrogenated Oils, High Fructose Corn Syrup).
+2. MODERATE CONCERNS & REFINED OILS: Deduct -10 points each (e.g. Palm / Palmolein Oil, Refined Bleached Sugar, Artificial Sweeteners, MSG, Sodium Nitrite, High Saturated Fat).
+3. MILD PROCESSING AGENTS: Deduct -4 points each (e.g. Preservative INS 211, Emulsifier INS 471, Added Iodised Salt, Acidity Regulators).
+4. USER PROFILE PENALTIES:
+   - Direct Allergy Conflict: Deduct -35 points (immediately triggers High Risk).
+   - Medical Condition Conflict: Deduct -20 points (e.g. High Salt for Hypertension, High Sugar/Refined Flour for Diabetes, High Saturated Fat for High Cholesterol).
+   - Diet Violation: Deduct -15 points.
+5. BENEFICIAL NUTRIENT BONUSES:
+   - Add +5 points each for genuine wholesome whole foods (e.g. Whole Pulses/Lentils, Oats, Nuts, Seeds, Natural Spices like Turmeric/Black Pepper).
+6. FINAL SCORE CALCULATION:
+   - Calculate Total Score = 100 - (All Deductions) + (Bonuses).
+   - Clamp final score between 1 and 100.
+
+RISK TIER & MANDATORY VERDICT MAPPING:
+- 🟢 SCORE 75 - 100: "Low" Risk.
+  Verdict Title (First User Insight): "🟢 Great for Daily Snacking" (Impact: "Positive").
+  Verdict Description: Explain in 1-2 simple sentences why this is wholesome and safe for everyday eating.
+- 🟡 SCORE 45 - 74: "Medium" Risk.
+  Verdict Title (First User Insight): "🟡 Only Good for Occasional Eating" (Impact: "Neutral").
+  Verdict Description: Explain in 1-2 simple sentences why eating this daily should be avoided (e.g. due to sodium/oil/sugar), but is fine as an occasional treat.
+- 🔴 SCORE 1 - 44: "High" Risk.
+  Verdict Title (First User Insight): "🔴 Daily Eating Can Be Dangerous" (Impact: "Negative").
+  Verdict Description: Explain in 1-2 clear sentences why regular consumption is dangerous to their body or specific health conditions.
+
+COMMUNICATION RULES:
+1. SIMPLE & JARGON-FREE: Write in plain, everyday conversational English. Avoid technical chemistry or medical jargon.
+2. SPEAK DIRECTLY TO USER: Always use "you" and "your".
+3. SUGGEST 2 HEALTHIER SNACKS: Recommend 2 clean, wholesome alternatives with a simple 1-sentence explanation."""
 
 
 def build_format_task_prompt(sources: list[dict] | None = None) -> str:
@@ -91,42 +115,47 @@ def build_format_task_prompt(sources: list[dict] | None = None) -> str:
 
     available_sources_str = ", ".join(f'"{d}"' for d in domains)
 
-    return f"""Convert the analysis into pure JSON matching this exact structure:
+    return f"""Format the nutritional analysis into pure, valid JSON matching this exact structure:
 {{
-  "health_score": <int 1-100>,
-  "risk_level": "<Low|Medium|High>",
+  "health_score": <integer 1 to 100>,
+  "risk_level": "<Low | Medium | High>",
   "issues": [
     {{
-      "ingredient": "<name>",
-      "risk": "<Medium|High>",
-      "reason": "<explanation>",
-      "source_domain": "<e.g. ewg.org or ingredex>"
+      "ingredient": "<exact ingredient name>",
+      "risk": "<Medium | High>",
+      "reason": "<simple, jargon-free 1-sentence explanation of why it is bad>",
+      "source_domain": "<e.g. who.int, fssai.gov.in, or ingredex>"
     }}
   ],
   "good_ingredients": [
     {{
-      "ingredient": "<name>",
-      "benefit": "<benefit>",
+      "ingredient": "<exact ingredient name>",
+      "benefit": "<simple 1-sentence explanation of what good nutrient it gives you>",
       "source_domain": "<e.g. fssai.gov.in or ingredex>"
     }}
   ],
   "alternatives": [
     {{
-      "name": "<healthier alternative name>",
-      "reason": "<nutritional justification>"
+      "name": "<clean healthier snack name>",
+      "reason": "<simple 1-sentence reason why it is healthier>"
     }}
   ],
   "user_insights": [
     {{
-      "impact": "<Positive|Negative|Neutral>",
-      "title": "<3-4 word title>",
-      "description": "<personalized insight using 'you/your'>"
+      "impact": "<Positive | Neutral | Negative>",
+      "title": "<e.g. 🟢 Great for Daily Snacking | 🟡 Only Good for Occasional Eating | 🔴 Daily Eating Can Be Dangerous>",
+      "description": "<simple 1-2 sentence explanation tailored directly to the user>"
+    }},
+    {{
+      "impact": "<Positive | Neutral | Negative>",
+      "title": "<concise title for allergy/condition insight>",
+      "description": "<clear advice using you/your>"
     }}
   ],
-  "summary": "<2-3 sentence overview>",
+  "summary": "<2 simple sentences giving the bottom line and practical advice for you.>",
   "sources_used": [{available_sources_str}]
 }}
-Do NOT output markdown fences (no ```json). Output raw JSON only."""
+Do NOT wrap with markdown fences. Return pure JSON text only."""
 
 
 
