@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import base64
+import io
 import re
 
+from PIL import Image
 from langchain_core.messages import HumanMessage
 from langchain_groq import ChatGroq
 
@@ -12,6 +14,31 @@ from app.ai.prompts import OCR_EXTRACTION_PROMPT
 from app.config import settings
 from app.utils.logger import logger
 
+
+def _optimize_image_for_vision(image_bytes: bytes, max_dimension: int = 768) -> tuple[bytes, str]:
+    """
+    Downscale high-resolution packaging images to max_dimension (768px)
+    to minimize visual tiling tokens in Groq Vision while preserving text legibility.
+    """
+    try:
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            if img.mode in ("RGBA", "P", "LA"):
+                img = img.convert("RGB")
+
+            width, height = img.size
+            if max(width, height) > max_dimension:
+                scale = max_dimension / max(width, height)
+                new_width = int(width * scale)
+                new_height = int(height * scale)
+                img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                logger.info("Scaled image from {}x{} to {}x{} for optimal vision tiling", width, height, new_width, new_height)
+
+            out_buf = io.BytesIO()
+            img.save(out_buf, format="JPEG", quality=85, optimize=True)
+            return out_buf.getvalue(), "image/jpeg"
+    except Exception as exc:
+        logger.warning("Image optimization fallback: {}", exc)
+        return image_bytes, _guess_image_mime(image_bytes)
 
 
 def _guess_image_mime(image_bytes: bytes) -> str:
@@ -79,15 +106,15 @@ async def extract_text_from_image(image_bytes: bytes) -> dict:
         logger.error("GROQ_API_KEY is not set; cannot run Groq Vision OCR")
         return {"extracted_text": None, "confidence": 0.0, "found": False}
 
-    b64 = base64.standard_b64encode(image_bytes).decode("ascii")
-    mime = _guess_image_mime(image_bytes)
+    opt_bytes, mime = _optimize_image_for_vision(image_bytes, max_dimension=768)
+    b64 = base64.standard_b64encode(opt_bytes).decode("ascii")
     data_url = f"data:{mime};base64,{b64}"
 
     llm = ChatGroq(
         model="qwen/qwen3.6-27b",
         api_key=settings.groq_api_key,
         temperature=0.0,
-        max_tokens=400,
+        max_tokens=600,
     )
 
     message = HumanMessage(
