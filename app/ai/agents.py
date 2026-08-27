@@ -25,7 +25,14 @@ def get_agents(settings: Settings) -> tuple[Agent, Agent]:
     if not model_name.startswith("groq/"):
         model_name = f"groq/{model_name}"
 
-    llm = LLM(
+    analyzer_llm = LLM(
+        model=model_name,
+        api_key=clean_key,
+        temperature=0.1,
+        max_tokens=600,
+    )
+
+    formatter_llm = LLM(
         model=model_name,
         api_key=clean_key,
         temperature=0.1,
@@ -36,16 +43,20 @@ def get_agents(settings: Settings) -> tuple[Agent, Agent]:
         role=ANALYZER_ROLE,
         goal=ANALYZER_GOAL,
         backstory=ANALYZER_BACKSTORY,
-        llm=llm,
+        llm=analyzer_llm,
         verbose=False,
+        allow_delegation=False,
+        max_iter=1,
     )
 
     formatter = Agent(
         role=FORMATTER_ROLE,
         goal=FORMATTER_GOAL,
         backstory=FORMATTER_BACKSTORY,
-        llm=llm,
+        llm=formatter_llm,
         verbose=False,
+        allow_delegation=False,
+        max_iter=1,
     )
 
     return analyzer, formatter

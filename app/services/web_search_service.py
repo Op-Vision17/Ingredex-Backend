@@ -334,8 +334,8 @@ class WebSearchService:
                 unique_sources.append(s)
 
         context = "\n\n".join(context_parts)
-        if len(context) > 1200:
-            context = context[:1200] + "\n[Context capped for token limits]"
+        if len(context) > 500:
+            context = context[:500] + "\n[Summary capped for token efficiency]"
         logger.info(
             f"Final context: {len(context)} chars, "
             f"{len(unique_sources)} unique sources"
@@ -379,8 +379,8 @@ class WebSearchService:
                 unique_sources.append(s)
 
         context = "\n\n".join(context_parts)
-        if len(context) > 3000:
-            context = context[:3000] + "\n[Context capped for token limits]"
+        if len(context) > 500:
+            context = context[:500] + "\n[Summary capped for token efficiency]"
         return context, unique_sources
 
 web_search_service = WebSearchService()
