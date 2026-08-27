@@ -49,18 +49,22 @@ def _response_text(content: object) -> str:
 
 
 def _strip_thinking_tags(text: str) -> str:
-    """Remove <think>...</think> tags and any unclosed trailing <think> blocks."""
-    # 1. Strip complete <think>...</think> blocks
-    s = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
-    # 2. Strip unclosed <think> to end of text
-    s = re.sub(r"<think>.*$", "", s, flags=re.DOTALL)
-    # 3. Strip any residual markdown thinking patterns (e.g., '1. **Analyze the image:**')
-    if "ingredient" in s.lower() and ("**analyze the image" in s.lower() or "the user wants me" in s.lower()):
-        # Try to find where actual ingredients start
-        match = re.search(r"(?:ingredients?|contains?|composition?)\s*[:\-]\s*(.+)", s, flags=re.IGNORECASE | re.DOTALL)
+    """Remove <think>...</think> tags and take pure extracted text."""
+    # If the response contains </think>, take everything AFTER </think>
+    if "</think>" in text:
+        text = text.split("</think>")[-1].strip()
+    elif "<think>" in text:
+        text = re.sub(r"<think>.*$", "", text, flags=re.DOTALL).strip()
+    
+    # Strip any residual markdown thinking patterns if present
+    if "ingredient" in text.lower() and ("**analyze the image" in text.lower() or "the user wants me" in text.lower()):
+        match = re.search(r"(?:ingredients?|contains?|composition?)\s*[:\-]\s*(.+)", text, flags=re.IGNORECASE | re.DOTALL)
         if match:
-            s = match.group(0)
-    return s.strip()
+            text = match.group(0)
+
+    # Clean leading headers
+    text = re.sub(r"^(?:ingredients?|contains?|composition?)\s*[:\-]\s*", "", text, flags=re.IGNORECASE)
+    return text.strip()
 
 
 async def extract_text_from_image(image_bytes: bytes) -> dict:
@@ -79,12 +83,12 @@ async def extract_text_from_image(image_bytes: bytes) -> dict:
     mime = _guess_image_mime(image_bytes)
     data_url = f"data:{mime};base64,{b64}"
 
-    # Use Groq's official vision model
+    # Use Groq's active Vision model with sufficient tokens for reasoning + answer
     llm = ChatGroq(
-        model="llama-3.2-11b-vision-preview",
+        model="qwen/qwen3.6-27b",
         api_key=settings.groq_api_key,
         temperature=0.0,
-        max_tokens=1024,
+        max_tokens=4096,
     )
 
     message = HumanMessage(
