@@ -37,24 +37,20 @@ def run_analysis(
     web_context: str = "",
     sources: list[dict] | None = None,
 ) -> dict[str, Any]:
+    from crewai import Agent, Task, Crew, Process
     from app.services.web_search_service import web_search_service
-    from app.ai.prompts import (
-        build_analyze_task_prompt,
-        build_format_task_prompt,
-        build_health_context_prompt,
-    )
-    from groq import Groq
-
     if not settings.groq_api_key.strip():
-        logger.error("GROQ_API_KEY is not set; cannot run ingredient analysis")
+        logger.error("GROQ_API_KEY is not set; cannot run ingredient crew")
         return _fallback_analysis_dict()
 
     if sources is None:
         sources = []
 
     ingredients_str = ", ".join(ingredients)
-    logger.info("Starting ingredient analysis for: {}", product_name or "Unknown")
 
+    logger.info("Starting 2-agent CrewAI analysis for: {}", product_name)
+
+    # If web_context wasn't pre-fetched asynchronously, attempt sync fallback
     if not web_context and not sources:
         try:
             web_context, sources = web_search_service.fetch_context(ingredients)
@@ -62,37 +58,31 @@ def run_analysis(
             logger.warning(f"Sync fallback web search skipped: {e}")
             web_context, sources = "", []
 
-    health_context = build_health_context_prompt(health_profile)
-    analyze_prompt = build_analyze_task_prompt(
+    analyzer, formatter = get_agents(settings)
+    analyze_task, format_task = get_tasks(
+        analyzer,
+        formatter,
         product_name,
         ingredients_str,
-        health_context,
         web_context=web_context,
+        sources=sources,
+        health_profile=health_profile,
     )
-    format_prompt = build_format_task_prompt(sources=sources)
-    full_prompt = f"{analyze_prompt}\n\n═══════════════════════════════\nOUTPUT FORMAT SPECIFICATION:\n{format_prompt}"
 
+    crew = Crew(
+        agents=[analyzer, formatter],
+        tasks=[analyze_task, format_task],
+        process=Process.sequential,
+        verbose=False,
+        tracing=False,
+    )
+
+    result_text = ""
     try:
-        client = Groq(api_key=settings.groq_api_key.strip())
-        model_name = settings.groq_model.strip()
-        if model_name.startswith("groq/"):
-            model_name = model_name[5:]
-
-        response = client.chat.completions.create(
-            model=model_name or "openai/gpt-oss-20b",
-            response_format={"type": "json_object"},
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a Senior Food Toxicologist and Nutritional Specialist. Output pure valid JSON matching the requested schema.",
-                },
-                {"role": "user", "content": full_prompt},
-            ],
-            temperature=0.1,
-            max_tokens=2048,
-        )
-        result_text = response.choices[0].message.content or ""
-        cleaned_text = result_text.strip()
+        raw_out = crew.kickoff()
+        result_text = str(raw_out).strip()
+        # Robust JSON block extraction
+        cleaned_text = result_text
         if "```" in cleaned_text:
             match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", cleaned_text, re.DOTALL)
             if match:
@@ -113,7 +103,7 @@ def run_analysis(
 
         parsed: dict[str, Any] = json.loads(cleaned_text)
         logger.info(
-            "Analysis complete — score={}",
+            "CrewAI analysis complete — score={}",
             parsed.get("health_score"),
         )
         return parsed
@@ -126,5 +116,5 @@ def run_analysis(
         )
         return _fallback_analysis_dict()
     except Exception as exc:
-        logger.warning("Ingredient analysis failed: {}; returning fallback", exc)
+        logger.warning("CrewAI crew execution failed: {}; returning fallback analysis", exc)
         return _fallback_analysis_dict()
