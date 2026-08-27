@@ -57,20 +57,25 @@ async def analyze_ingredients(
         cached = None
 
     if cached is not None:
-        logger.info("Analysis served from cache for key={}", analysis_cache_key)
-        try:
-            analysis = AnalysisResult.model_validate(cached)
-        except Exception as exc:
-            logger.error("Cached analysis failed validation: {}", exc)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Invalid cached analysis payload",
-            ) from exc
-        return AnalyzeResponse(
-            analysis=analysis,
-            product_name=body.product_name,
-            scan_id=None,
-        )
+        summary_val = cached.get("summary", "") if isinstance(cached, dict) else ""
+        if "Automated analysis could not be completed" in summary_val:
+            logger.warning("Ignoring cached fallback error analysis; will re-analyze")
+            cached = None
+        else:
+            logger.info("Analysis served from cache for key={}", analysis_cache_key)
+            try:
+                analysis = AnalysisResult.model_validate(cached)
+            except Exception as exc:
+                logger.error("Cached analysis failed validation: {}", exc)
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Invalid cached analysis payload",
+                ) from exc
+            return AnalyzeResponse(
+                analysis=analysis,
+                product_name=body.product_name,
+                scan_id=None,
+            )
 
     logger.info("Analysis cache miss — fetching web search context & running CrewAI pipeline")
     try:
@@ -122,10 +127,11 @@ async def analyze_ingredients(
     await db.refresh(scan)
     logger.info("Saved ProductScan id={} for user_id={}", scan.id, current_user.id)
 
-    try:
-        await cache.cache_analysis_result(analysis_cache_key, analysis.model_dump())
-    except RuntimeError:
-        logger.warning("Could not cache analysis result (Redis unavailable)")
+    if "Automated analysis could not be completed" not in analysis.summary:
+        try:
+            await cache.cache_analysis_result(analysis_cache_key, analysis.model_dump())
+        except RuntimeError:
+            logger.warning("Could not cache analysis result (Redis unavailable)")
 
     return AnalyzeResponse(
         analysis=analysis,
