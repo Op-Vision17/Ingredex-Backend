@@ -18,18 +18,24 @@ from app.config import Settings
 
 
 def get_agents(settings: Settings) -> tuple[Agent, Agent]:
-    clean_key = settings.groq_api_key.strip()
-    os.environ["GROQ_API_KEY"] = clean_key
-
-    model_name = settings.groq_model.strip() or "groq/llama-3.1-8b-instant"
-    if not model_name.startswith("groq/"):
-        model_name = f"groq/{model_name}"
+    if settings.gemini_api_key.strip():
+        clean_key = settings.gemini_api_key.strip()
+        os.environ["GEMINI_API_KEY"] = clean_key
+        model_name = settings.groq_model.strip()
+        if not model_name.startswith("gemini/"):
+            model_name = "gemini/gemini-3.6-flash"
+    else:
+        clean_key = settings.groq_api_key.strip()
+        os.environ["GROQ_API_KEY"] = clean_key
+        model_name = settings.groq_model.strip() or "groq/llama-3.1-8b-instant"
+        if not model_name.startswith("groq/"):
+            model_name = f"groq/{model_name}"
 
     analyzer_llm = LLM(
         model=model_name,
         api_key=clean_key,
         temperature=0.1,
-        max_tokens=600,
+        max_tokens=800,
     )
 
     formatter_llm = LLM(

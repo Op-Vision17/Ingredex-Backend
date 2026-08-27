@@ -40,12 +40,12 @@ class Settings(BaseSettings):
     )
     groq_api_key: str = Field(default="", description="Groq API key for LLM and vision")
     groq_model: str = Field(
-        default="groq/qwen/qwen3.8-27b",
-        description="Groq LLM model name for CrewAI (e.g. groq/qwen/qwen3.8-27b or groq/openai/gpt-oss-120b)",
+        default="gemini/gemini-3.6-flash",
+        description="LLM model name for CrewAI (e.g. gemini/gemini-3.6-flash or groq/llama-3.1-8b-instant)",
     )
     gemini_api_key: str = Field(
         default="",
-        description="Optional Google Gemini API key (legacy; optional)",
+        description="Google Gemini API key (for Gemini Flash OCR & Multi-Agent Analysis)",
     )
     tavily_api_key: str = ""
     upstash_redis_rest_url: str = Field(

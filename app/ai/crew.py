@@ -78,43 +78,59 @@ def run_analysis(
     )
 
     result_text = ""
-    try:
-        raw_out = crew.kickoff()
-        result_text = str(raw_out).strip()
-        # Robust JSON block extraction
-        cleaned_text = result_text
-        if "```" in cleaned_text:
-            match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", cleaned_text, re.DOTALL)
-            if match:
-                cleaned_text = match.group(1)
-            else:
-                parts = cleaned_text.split("```")
-                for part in parts:
-                    part = part.strip()
-                    if part.startswith("json"):
-                        part = part[4:].strip()
-                    if part.startswith("{") and part.endswith("}"):
-                        cleaned_text = part
-                        break
-        elif "{" in cleaned_text and "}" in cleaned_text:
-            first_brace = cleaned_text.find("{")
-            last_brace = cleaned_text.rfind("}")
-            cleaned_text = cleaned_text[first_brace : last_brace + 1]
+    for attempt in range(2):
+        try:
+            raw_out = crew.kickoff()
+            result_text = str(raw_out).strip()
+            # Robust JSON block extraction
+            cleaned_text = result_text
+            if "```" in cleaned_text:
+                match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", cleaned_text, re.DOTALL)
+                if match:
+                    cleaned_text = match.group(1)
+                else:
+                    parts = cleaned_text.split("```")
+                    for part in parts:
+                        part = part.strip()
+                        if part.startswith("json"):
+                            part = part[4:].strip()
+                        if part.startswith("{") and part.endswith("}"):
+                            cleaned_text = part
+                            break
+            elif "{" in cleaned_text and "}" in cleaned_text:
+                first_brace = cleaned_text.find("{")
+                last_brace = cleaned_text.rfind("}")
+                cleaned_text = cleaned_text[first_brace : last_brace + 1]
 
-        parsed: dict[str, Any] = json.loads(cleaned_text)
-        logger.info(
-            "CrewAI analysis complete — score={}",
-            parsed.get("health_score"),
-        )
-        return parsed
+            parsed: dict[str, Any] = json.loads(cleaned_text)
+            logger.info(
+                "CrewAI analysis complete — score={}",
+                parsed.get("health_score"),
+            )
+            return parsed
 
-    except json.JSONDecodeError as e:
-        logger.error(
-            "JSON parse failed: {} | raw: {!r}",
-            e,
-            result_text[:200] if result_text else "",
-        )
-        return _fallback_analysis_dict()
-    except Exception as exc:
-        logger.warning("CrewAI crew execution failed: {}; returning fallback analysis", exc)
-        return _fallback_analysis_dict()
+        except json.JSONDecodeError as e:
+            logger.error(
+                "JSON parse failed: {} | raw: {!r}",
+                e,
+                result_text[:200] if result_text else "",
+            )
+            if attempt == 0:
+                import time
+                time.sleep(1)
+                continue
+            return _fallback_analysis_dict()
+        except Exception as exc:
+            logger.warning(
+                "CrewAI execution attempt {} failed: {}",
+                attempt + 1,
+                exc,
+            )
+            if attempt == 0:
+                import time
+                logger.info("Retrying CrewAI analysis after 3s backoff...")
+                time.sleep(3)
+                continue
+            return _fallback_analysis_dict()
+
+    return _fallback_analysis_dict()
