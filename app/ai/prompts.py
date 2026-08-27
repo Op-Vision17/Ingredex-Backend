@@ -134,15 +134,7 @@ Do NOT output markdown fences (no ```json). Output raw JSON only."""
 # Service Prompts (OCR & Web Search)
 # ==============================================================================
 
-OCR_EXTRACTION_PROMPT = """You are an expert OCR food packaging ingredient extraction specialist.
-
-INSTRUCTIONS:
-1. Carefully scan the image for the ingredient list panel on the food or beverage packaging.
-2. Locate section headers such as 'INGREDIENTS:', 'INGREDIENT LIST:', 'CONTAINS:', or 'COMPOSITION:'.
-3. Extract ONLY the exact, complete raw ingredient list text as printed on the packaging.
-4. Preserve parenthetical sub-ingredients, E-numbers/INS numbers, percentages, and punctuation (commas, semicolons).
-5. Exclude non-ingredient text such as marketing slogans, nutrition facts tables, barcode numbers, net weight, storage instructions, or manufacturer address.
-6. If the ingredient list is missing, blurry, unreadable, or not visible in the image, return EXACTLY: 'NO_INGREDIENTS_FOUND'.
-7. Do NOT include markdown code fences, headers, explanations, or introductory text. Output raw extracted text only."""
+OCR_EXTRACTION_PROMPT = """Extract and output ONLY the verbatim raw ingredients list text from this packaging image.
+Do not explain, do not reason, do not add introductory text. If no ingredients list is visible, return exactly 'NO_INGREDIENTS_FOUND'."""
 
 WEB_SEARCH_QUERY_TEMPLATE = "{ingredients} food safety toxicology health effects risks benefits"

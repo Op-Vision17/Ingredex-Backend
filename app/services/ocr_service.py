@@ -83,12 +83,11 @@ async def extract_text_from_image(image_bytes: bytes) -> dict:
     mime = _guess_image_mime(image_bytes)
     data_url = f"data:{mime};base64,{b64}"
 
-    # Use Groq's active Vision model with sufficient tokens for reasoning + answer
     llm = ChatGroq(
         model="qwen/qwen3.6-27b",
         api_key=settings.groq_api_key,
         temperature=0.0,
-        max_tokens=4096,
+        max_tokens=400,
     )
 
     message = HumanMessage(
