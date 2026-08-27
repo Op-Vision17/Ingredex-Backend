@@ -35,14 +35,14 @@ def get_agents(settings: Settings) -> tuple[Agent, Agent]:
         model=model_name,
         api_key=clean_key,
         temperature=0.1,
-        max_tokens=800,
+        max_tokens=2048,
     )
 
     formatter_llm = LLM(
         model=model_name,
         api_key=clean_key,
         temperature=0.1,
-        max_tokens=2048,
+        max_tokens=8192,
     )
 
     analyzer = Agent(
