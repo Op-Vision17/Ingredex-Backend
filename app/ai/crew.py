@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from typing import Any
 
 os.environ["CREWAI_DISABLE_TELEMETRY"] = "true"
@@ -79,19 +80,27 @@ def run_analysis(
     result_text = ""
     try:
         raw_out = crew.kickoff()
-        result_text = str(raw_out).strip()
+        # Robust JSON block extraction
+        cleaned_text = result_text
+        if "```" in cleaned_text:
+            match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", cleaned_text, re.DOTALL)
+            if match:
+                cleaned_text = match.group(1)
+            else:
+                parts = cleaned_text.split("```")
+                for part in parts:
+                    part = part.strip()
+                    if part.startswith("json"):
+                        part = part[4:].strip()
+                    if part.startswith("{") and part.endswith("}"):
+                        cleaned_text = part
+                        break
+        elif "{" in cleaned_text and "}" in cleaned_text:
+            first_brace = cleaned_text.find("{")
+            last_brace = cleaned_text.rfind("}")
+            cleaned_text = cleaned_text[first_brace : last_brace + 1]
 
-        if "```" in result_text:
-            parts = result_text.split("```")
-            for part in parts:
-                part = part.strip()
-                if part.startswith("json"):
-                    part = part[4:].strip()
-                if part.startswith("{"):
-                    result_text = part
-                    break
-
-        parsed: dict[str, Any] = json.loads(result_text)
+        parsed: dict[str, Any] = json.loads(cleaned_text)
         logger.info(
             "CrewAI analysis complete — score={}",
             parsed.get("health_score"),

@@ -265,10 +265,10 @@ class WebSearchService:
         searchable = [
             i for i in ingredients
             if i.lower().strip() not in SKIP_SEARCH
-        ]
+        ][:12]  # Cap to top 12 active ingredients max to safeguard API latency & quotas
         skipped = len(ingredients) - len(searchable)
         if skipped:
-            logger.info(f"Skipped {skipped} common ingredients (water, salt, etc.)")
+            logger.info(f"Skipped {skipped} common/excess ingredients")
 
         if not searchable:
             logger.info("All ingredients are common — no search needed")
@@ -295,7 +295,15 @@ class WebSearchService:
         fresh_results: dict[str, dict] = {}
         if need_search:
             try:
-                fresh_results = await asyncio.to_thread(self._batch_search, need_search)
+                # Limit fresh searches to max 10 to ensure < 2s response time
+                search_targets = need_search[:10]
+                fresh_results = await asyncio.wait_for(
+                    asyncio.to_thread(self._batch_search, search_targets),
+                    timeout=6.0,
+                )
+            except asyncio.TimeoutError:
+                logger.warning("Tavily batch search timed out after 6.0s; proceeding with available context")
+                fresh_results = {}
             except Exception as e:
                 logger.warning(f"Tavily search execution error: {e}")
                 fresh_results = {}

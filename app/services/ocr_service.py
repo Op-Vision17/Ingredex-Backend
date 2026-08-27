@@ -48,6 +48,21 @@ def _response_text(content: object) -> str:
     return str(content)
 
 
+def _strip_thinking_tags(text: str) -> str:
+    """Remove <think>...</think> tags and any unclosed trailing <think> blocks."""
+    # 1. Strip complete <think>...</think> blocks
+    s = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    # 2. Strip unclosed <think> to end of text
+    s = re.sub(r"<think>.*$", "", s, flags=re.DOTALL)
+    # 3. Strip any residual markdown thinking patterns (e.g., '1. **Analyze the image:**')
+    if "ingredient" in s.lower() and ("**analyze the image" in s.lower() or "the user wants me" in s.lower()):
+        # Try to find where actual ingredients start
+        match = re.search(r"(?:ingredients?|contains?|composition?)\s*[:\-]\s*(.+)", s, flags=re.IGNORECASE | re.DOTALL)
+        if match:
+            s = match.group(0)
+    return s.strip()
+
+
 async def extract_text_from_image(image_bytes: bytes) -> dict:
     """
     Call Groq Vision to read the ingredients list from a product photo.
@@ -64,10 +79,12 @@ async def extract_text_from_image(image_bytes: bytes) -> dict:
     mime = _guess_image_mime(image_bytes)
     data_url = f"data:{mime};base64,{b64}"
 
+    # Use Groq's official vision model
     llm = ChatGroq(
-        model="qwen/qwen3.6-27b",
+        model="llama-3.2-11b-vision-preview",
         api_key=settings.groq_api_key,
-        temperature=0,
+        temperature=0.0,
+        max_tokens=1024,
     )
 
     message = HumanMessage(
@@ -87,10 +104,10 @@ async def extract_text_from_image(image_bytes: bytes) -> dict:
         return {"extracted_text": None, "confidence": 0.0, "found": False}
 
     raw = _response_text(response.content).strip()
-    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
+    raw = _strip_thinking_tags(raw)
     stripped = raw.strip().strip('"').strip("'")
     compact = re.sub(r"\s+", "", stripped.upper())
-    if compact == "NO_INGREDIENTS_FOUND":
+    if not compact or compact == "NO_INGREDIENTS_FOUND" or "NO_INGREDIENTS_FOUND" in compact:
         logger.info("Groq Vision OCR: no ingredients list detected (NO_INGREDIENTS_FOUND)")
         return {"extracted_text": None, "confidence": 0.0, "found": False}
 
@@ -105,3 +122,4 @@ async def extract_text_from_image(image_bytes: bytes) -> dict:
         "confidence": 0.95,
         "found": True,
     }
+

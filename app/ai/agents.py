@@ -29,6 +29,7 @@ def get_agents(settings: Settings) -> tuple[Agent, Agent]:
         model=model_name,
         api_key=clean_key,
         temperature=0.1,
+        max_tokens=2048,
     )
 
     analyzer = Agent(

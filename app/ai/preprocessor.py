@@ -37,24 +37,56 @@ def _strip_parenthetical_content(token: str) -> str:
     return s.strip()
 
 
+_CONVERSATIONAL_KEYWORDS = {
+    "user", "analyze", "image", "locate", "transcribe", "readable", "label",
+    "bottle", "looking", "crop", "zoom", "blurry", "sample", "dense", "actually",
+    "wait", "think", "extract", "contains:", "ingredients:", "ingredient list",
+}
+
+
+def _is_invalid_ingredient_token(t: str) -> bool:
+    """Check if token is conversational text, markdown noise, or meta commentary."""
+    if not t or len(t) < 2 or len(t) > 90:
+        return True
+    if t.startswith("<") or t.endswith(">"):
+        return True
+    if re.match(r"^(?:step|\d+\.|\*|\-)\s*", t):
+        return True
+    # If token contains multiple conversational keywords or looks like a full English sentence
+    words = set(re.findall(r"\b[a-z]{3,}\b", t.lower()))
+    if len(words.intersection(_CONVERSATIONAL_KEYWORDS)) >= 2:
+        return True
+    if t.lower().startswith("the user") or t.lower().startswith("i need") or t.lower().startswith("let's"):
+        return True
+    return False
+
+
 def normalize_ingredients(raw: str) -> list[str]:
     """
     Split, clean, lowercase, dedupe, and map synonyms to canonical names.
+    Safely filters out OCR reasoning debris, sentences, and markdown artifacts.
 
     Returns a stable ordered list (first-seen order preserved).
     """
+    # Remove leading common prefixes if present
+    cleaned_raw = re.sub(r"^(?:ingredients?|contains?|composition?)\s*[:\-]\s*", "", raw.strip(), flags=re.IGNORECASE)
+
     seen: set[str] = set()
     out: list[str] = []
-    for part in _split_ingredients(raw):
-        t = _strip_parenthetical_content(part)
+    for part in _split_ingredients(cleaned_raw):
+        # Strip markdown bolding / bullets
+        t = re.sub(r"^[\*\-\d\.\s]+", "", part).strip()
+        t = t.replace("**", "").replace("__", "").strip()
+        t = _strip_parenthetical_content(t)
         t = re.sub(r"\s+", " ", t).strip().lower()
-        if not t:
+        if _is_invalid_ingredient_token(t):
             continue
         t = _SYNONYMS.get(t, t)
         if t not in seen:
             seen.add(t)
             out.append(t)
-    return out
+    return out[:35]
+
 
 
 def ingredients_to_string(ingredients: list[str]) -> str:
